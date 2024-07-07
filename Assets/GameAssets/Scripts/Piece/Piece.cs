@@ -2,30 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Piece : MonoBehaviour
+public class Piece : WorldMatrix
 {
     public PieceType Type;
-    public int[][] PieceMatrix;
-    public Vector2Int Position;
     public GameObject PiecePrefab;
     List<GameObject> Tiles = new List<GameObject>();
 
     public void CreatePiece()
     {
-        for (int i = 0; i < PieceMatrix.Length; i++)
+        for (int i = 0; i < Matrix.Count; i++)
         {
-            for (int j = 0; j < PieceMatrix[i].Length; j++)
+            for (int j = 0; j < Matrix[i].Count; j++)
             {
-                if (PieceMatrix[i][j] == 1)
+                if (Matrix[i][j] == 1)
                 {
-                    Vector3 Position = new Vector3(this.Position.x + j, this.Position.y - i, 0);
-                    GameObject tile = Instantiate(PiecePrefab, Position, Quaternion.identity);
+                    Vector3 WorldPosition = new Vector3(this.WorldPosition.x + j, this.WorldPosition.y - i, 0);
+                    GameObject tile = Instantiate(PiecePrefab, WorldPosition, Quaternion.identity);
                     tile.transform.SetParent(this.transform);
                     Tiles.Add(tile);
                 }
             }
         }
-        PrintPiece();
+        PrintMatrix();
 
     }
 
@@ -33,46 +31,47 @@ public class Piece : MonoBehaviour
     {
         if (Direction)
         {
-            int[][] rotatedPiece = new int[PieceMatrix[0].Length][];
-            for (int i = 0; i < rotatedPiece.Length; i++)
+            List<List<int>> rotatedPiece = new List<List<int>>();
+            for (int i = 0; i < Matrix[0].Count; i++)
             {
-                rotatedPiece[i] = new int[PieceMatrix.Length];
+                rotatedPiece.Add(new List<int>(new int[Matrix.Count]));
             }
 
-            for (int i = 0; i < PieceMatrix.Length; i++)
+            for (int i = 0; i < Matrix.Count; i++)
             {
-                for (int j = 0; j < PieceMatrix[i].Length; j++)
+                for (int j = 0; j < Matrix[i].Count; j++)
                 {
-                    rotatedPiece[j][PieceMatrix.Length - 1 - i] = PieceMatrix[i][j];
+                    rotatedPiece[j][Matrix.Count - 1 - i] = Matrix[i][j];
                 }
             }
 
-            PieceMatrix = rotatedPiece;
+            Matrix = rotatedPiece;
         }
         else
         {
-            int[][] rotatedPiece = new int[PieceMatrix[0].Length][];
-            for (int i = 0; i < rotatedPiece.Length; i++)
+            List<List<int>> rotatedPiece = new List<List<int>>();
+            for (int i = 0; i < Matrix[0].Count; i++)
             {
-                rotatedPiece[i] = new int[PieceMatrix.Length];
+                rotatedPiece.Add(new List<int>(new int[Matrix.Count]));
             }
 
-            for (int i = 0; i < PieceMatrix.Length; i++)
+            for (int i = 0; i < Matrix.Count; i++)
             {
-                for (int j = 0; j < PieceMatrix[i].Length; j++)
+                for (int j = 0; j < Matrix[i].Count; j++)
                 {
-                    rotatedPiece[PieceMatrix[0].Length - 1 - j][i] = PieceMatrix[i][j];
+                    rotatedPiece[Matrix[0].Count - 1 - j][i] = Matrix[i][j];
                 }
             }
 
-            PieceMatrix = rotatedPiece;
+            Matrix = rotatedPiece;
         }
         RecreatePiece();
     }
 
+
     private void Update()
     {
-        transform.position = new Vector3(Position.x, Position.y, 0);
+        transform.position = new Vector3(WorldPosition.x, WorldPosition.y, 0);
     }
 
     public void RecreatePiece()
@@ -85,19 +84,6 @@ public class Piece : MonoBehaviour
         CreatePiece();
     }
 
-    private void PrintPiece()
-    {
-        string pieceString = "";
-        for (int i = 0; i < PieceMatrix.Length; i++)
-        {
-            for (int j = 0; j < PieceMatrix[i].Length; j++)
-            {
-                pieceString += PieceMatrix[i][j] + " ";
-            }
-            pieceString += "\n";
-        }
-        Debug.Log(pieceString);
-    }
 
 
 

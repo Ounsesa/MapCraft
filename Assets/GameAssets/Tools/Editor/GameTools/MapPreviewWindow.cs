@@ -9,7 +9,7 @@ using System.Linq;
 public class MapPreviewWindow : EditorWindow
 {
     static MapPreviewWindow window;
-    private int[][] MapMatrix;
+    private List<List<int>> MapMatrix;
 
     private string MapFilePath = "Assets/GameAssets/Scripts/Map/";
     private string MapFileName = "InitialMap.csv";
@@ -71,7 +71,7 @@ public class MapPreviewWindow : EditorWindow
         {
             RemoveRow();
         }
-        EditorGUILayout.LabelField("Rows: " + MapMatrix.Length);
+        EditorGUILayout.LabelField("Rows: " + MapMatrix.Count);
 
         if (GUILayout.Button("+"))
         {
@@ -81,7 +81,7 @@ public class MapPreviewWindow : EditorWindow
         {
             RemoveColumn();
         }
-        EditorGUILayout.LabelField("Columns: " + MapMatrix[0].Length); 
+        EditorGUILayout.LabelField("Columns: " + MapMatrix[0].Count); 
         if (GUILayout.Button("+"))
         {
             AddColumn();
@@ -92,28 +92,31 @@ public class MapPreviewWindow : EditorWindow
 
     private void ShowMapGUI()
     {
-        for(int i = 0;  i < MapMatrix.Length; i++) 
+        for(int i = 0;  i < MapMatrix.Count; i++) 
         {
             EditorGUILayout.BeginHorizontal();
-            for (int j = 0; j < MapMatrix[i].Length; j++)
+            for (int j = 0; j < MapMatrix[i].Count; j++)
             {
                 int aux = MapMatrix[i][j];
                 string newValue = EditorGUILayout.TextField(MapMatrix[i][j].ToString());
-                if (!(int.TryParse(newValue, out MapMatrix[i][j]) || newValue == "-" || newValue == ""))
+                int outValue = aux;
+                if (!(int.TryParse(newValue, out outValue) || newValue == "-" || newValue == ""))
                 {
                     EditorUtility.DisplayDialog("Error: Invalid Number", "Error: Invalid Number Set in position (" + i + "," + j + ")", "Okey");
-                    MapMatrix[i][j] = aux;
+                    outValue = aux;
                 }
-                else if (MapMatrix[i][j] >= ResourcesManager.GetEnumLength<BiomeType>())
+                else if (outValue >= ResourcesManager.GetEnumLength<BiomeType>())
                 {
                     EditorUtility.DisplayDialog("Error: Invalid Number", "Error: Number Too High For Existing Biomes in position (" + i + "," + j + ")", "Okey");
-                    MapMatrix[i][j] = aux;
+                    outValue = aux;
                 }
-                else if (MapMatrix[i][j] < -1)
+                else if (outValue < -1)
                 {
                     EditorUtility.DisplayDialog("Error: Invalid Number", "Error: Invalid Number Set in position (" + i + "," + j + "), Obstacle Value Is -1", "Okey");
-                    MapMatrix[i][j] = aux;
+                    outValue = aux;
                 }
+
+                MapMatrix[i][j] = outValue;
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();
@@ -130,68 +133,30 @@ public class MapPreviewWindow : EditorWindow
 
     private void AddRow()
     {
-        int[] NewRow = Enumerable.Repeat(ValueToAdd, MapMatrix[0].Length).ToArray();
-
-        // Resize the MapMatrix to accommodate the new row
-        int[][] temp = new int[MapMatrix.Length + 1][];
-        for (int i = 0; i < MapMatrix.Length; i++)
-        {
-            temp[i] = MapMatrix[i];
-        }
-        temp[MapMatrix.Length] = NewRow;
-        MapMatrix = temp;
+        List<int> NewRow = Enumerable.Repeat(ValueToAdd, MapMatrix[0].Count).ToList();
+        MapMatrix.Add(NewRow);
     }
 
     private void RemoveRow()
-    { 
-        // Resize the MapMatrix to remove a row
-        int[][] temp = new int[MapMatrix.Length - 1][];
-        for (int i = 0; i < MapMatrix.Length - 1; i++)
-        {
-            temp[i] = MapMatrix[i];
-        }
-        MapMatrix = temp;
-
+    {
+        MapMatrix.RemoveAt(MapMatrix.Count - 1);
     }
 
     private void AddColumn()
     {
         // Iterate through each row and add the new column value
-        for (int i = 0; i < MapMatrix.Length; i++)
+        for (int i = 0; i < MapMatrix.Count; i++)
         {
-            // Create a new array with an additional column
-            int[] newRow = new int[MapMatrix[i].Length + 1];
-
-            // Copy existing values
-            for (int j = 0; j < MapMatrix[i].Length; j++)
-            {
-                newRow[j] = MapMatrix[i][j];
-            }
-
-            // Add the new column value at the end of the row
-            newRow[newRow.Length - 1] = ValueToAdd;
-
-            // Assign the new row back to the matrix
-            MapMatrix[i] = newRow;
+            MapMatrix[i].Add(ValueToAdd);            
         }
     }
 
     private void RemoveColumn()
     {
         // Iterate through each row and remove one column
-        for (int i = 0; i < MapMatrix.Length; i++)
+        for (int i = 0; i < MapMatrix.Count; i++)
         {
-            // Create a new array with an additional column
-            int[] newRow = new int[MapMatrix[i].Length - 1];
-
-            // Copy existing values
-            for (int j = 0; j < MapMatrix[i].Length - 1; j++)
-            {
-                newRow[j] = MapMatrix[i][j];
-            }
-
-            // Assign the new row back to the matrix
-            MapMatrix[i] = newRow;
+            MapMatrix[i].RemoveAt(MapMatrix[i].Count - 1);
         }
 
     }
@@ -203,13 +168,13 @@ public class MapPreviewWindow : EditorWindow
         GUILayout.Label("Map Preview:");
         
         float StartX = 10f;    // Starting X position of the preview
-        float TileSize = (position.width - StartX*2) / (MapMatrix[0].Length + MapMatrix.Length);  // Size of each tile in the preview
-        float StartY = 150f + 30 * MapMatrix.Length;   // Starting Y position of the preview
+        float TileSize = (position.width - StartX*2) / (MapMatrix[0].Count + MapMatrix.Count);  // Size of each tile in the preview
+        float StartY = 150f + 30 * MapMatrix.Count;   // Starting Y position of the preview
 
         Handles.BeginGUI();
-        for (int i = 0; i < MapMatrix.Length; i++)
+        for (int i = 0; i < MapMatrix.Count; i++)
         {
-            for (int j = 0; j < MapMatrix[i].Length; j++)
+            for (int j = 0; j < MapMatrix[i].Count; j++)
             {
                 Rect tileRect = new Rect(StartX + j * TileSize, StartY + i * TileSize, TileSize, TileSize);
                 Color tileColor = GetTileColor(MapMatrix[i][j]);

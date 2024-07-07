@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class CSVParser
 {
-    public static int[][] ParseCSVToMatrix(string PathFile)
+    public static List<List<int>> ParseCSVToMatrix(string PathFile)
     {
-        int[][] MapMatrix;
+        List<List<int>> MapMatrix = new List<List<int>>();
 
         // Read the entire file to determine the number of rows and columns
         List<string[]> lines = new List<string[]>();
@@ -22,46 +22,39 @@ public class CSVParser
             }
         }
 
-        // Initialize the MapMatrix based on the number of rows and columns
-        int numRows = lines.Count;
-        int numCols = lines[0].Length;
-        MapMatrix = new int[numRows][];
-        for (int i = 0; i < numRows; i++)
-        {
-            MapMatrix[i] = new int[numCols];
-        }
-
         // Fill MapMatrix with the values from the CSV file
-        for (int i = 0; i < numRows; i++)
+        foreach (var line in lines)
         {
-            for (int j = 0; j < numCols; j++)
+            List<int> row = new List<int>();
+            foreach (var value in line)
             {
-                MapMatrix[i][j] = int.Parse(lines[i][j]);
+                row.Add(int.Parse(value));
             }
+            MapMatrix.Add(row);
         }
 
         return MapMatrix;
     }
 
-    public static void ParseMatrixToCSV(string PathFile, int[][] MapMatrix)
+    public static void ParseMatrixToCSV(string PathFile, List<List<int>> MapMatrix)
     {
-        string[] lines = new string[MapMatrix.Length];
-        // Fill MapMatrix with the values from the CSV file
-        for (int i = 0; i < MapMatrix.Length; i++)
+        List<string> lines = new List<string>();
+
+        // Convert MapMatrix to lines of CSV
+        foreach (var row in MapMatrix)
         {
-            for (int j = 0; j < MapMatrix[0].Length; j++)
-            {
-                lines[i] += MapMatrix[i][j] + ";";
-            }
-            lines[i] = lines[i].TrimEnd(';');
+            string line = string.Join(";", row);
+            lines.Add(line);
         }
 
-        using (StreamWriter writer = new StreamWriter(PathFile)) 
-        { 
-            for(int i = 0; i < lines.Length; i++)
+        // Write lines to the file
+        using (StreamWriter writer = new StreamWriter(PathFile))
+        {
+            foreach (var line in lines)
             {
-                writer.WriteLine(lines[i]);
+                writer.WriteLine(line);
             }
         }
     }
+
 }

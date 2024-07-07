@@ -25,9 +25,12 @@ public class Player : MonoBehaviour
         InputAction = GameManager.Instance.InputManager.RegisterInputActionsPlayer(playerInput, this);
 
 
-        CurrentPiece.PieceMatrix = new int[2][];
-        CurrentPiece.PieceMatrix[0] = new int[3] { 1, 1, 1 };
-        CurrentPiece.PieceMatrix[1] = new int[3] { 1, 0, 1 };
+        // Initialize CurrentPiece.Matrix using List<List<int>>
+        CurrentPiece.Matrix = new List<List<int>>()
+        {
+            new List<int> { 1, 1, 1 },
+            new List<int> { 1, 0, 1 }
+        };
         CurrentPiece.CreatePiece();
 
     }
@@ -38,7 +41,7 @@ public class Player : MonoBehaviour
         ReceiveInput();
         if(CurrentPiece != null)
         {
-            CurrentPiece.Position = new Vector2Int((int)transform.position.x, (int)transform.position.y);
+            CurrentPiece.WorldPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
         }
     }
 

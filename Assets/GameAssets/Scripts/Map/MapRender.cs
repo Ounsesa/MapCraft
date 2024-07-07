@@ -23,21 +23,21 @@ public class MapRender : MonoBehaviour
 
     public void RenderMap()
     {
-        for (int i = 0; i < Map.MapMatrix.Length; i++)
+        for (int i = 0; i < Map.Matrix.Count; i++)
         {
-            for (int j = 0; j < Map.MapMatrix[i].Length; j++)
+            for (int j = 0; j < Map.Matrix[i].Count; j++)
             {
-                if (Map.MapMatrix[i][j] < 0)
+                if (Map.Matrix[i][j] < 0)
                 {
                     continue;
                 }
                 // Calculate the position for the current tile
-                Vector2 tilePosition = new Vector2(Map.MapPosition.x + j * TileSize, Map.MapPosition.y - i * TileSize);
+                Vector2 tilePosition = new Vector2(Map.WorldPosition.x + j * TileSize, Map.WorldPosition.y - i * TileSize);
 
                 // Instantiate the tile prefab at the calculated position
                 GameObject tile = Instantiate(TilePrefab, tilePosition, Quaternion.identity);
 
-                SetBiomeColor(tile, Map.MapMatrix[i][j]);
+                SetBiomeColor(tile, Map.Matrix[i][j]);
                 // Optionally, you can set the tile's parent to keep the hierarchy clean
                 tile.transform.parent = this.transform;
             }
@@ -78,9 +78,9 @@ public class MapRender : MonoBehaviour
         //Debug.Log($"Mouse is over tile at ({x}, {y})");
         Player.transform.position = new Vector3(x , y , 0);
         //Check if the calculated position is within the bounds of the map
-        if (x >= 0 && y >= 0 && x < Map.MapMatrix[0].Length && y < Map.MapMatrix.Length)
+        if (x >= 0 && y >= 0 && x < Map.Matrix[0].Count && y < Map.Matrix.Count)
         {
-            //Debug.Log($"Mouse is over tile at ({x}, {y}) with value {Map.MapMatrix[y][x]}");
+            //Debug.Log($"Mouse is over tile at ({x}, {y}) with value {Map.Matrix[y][x]}");
         }
     }
 }

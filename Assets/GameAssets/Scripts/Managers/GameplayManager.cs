@@ -27,11 +27,11 @@ public class GameplayManager : Manager
 
     void LootResources()
     {
-        int[][] MapMatrix = Map.MapMatrix;
+        List<List<int>> MapMatrix = Map.Matrix;
 
-        for(int i = 0; i < MapMatrix.Length; i++)
+        for(int i = 0; i < MapMatrix.Count; i++)
         {
-            for(int j = 0; j < MapMatrix[i].Length; j++)
+            for(int j = 0; j < MapMatrix[i].Count; j++)
             {
                 ResourcesManager.ParseIntToResource(MapMatrix[i][j]);
             }
