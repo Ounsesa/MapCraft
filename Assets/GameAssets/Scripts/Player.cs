@@ -28,8 +28,8 @@ public class Player : MonoBehaviour
         // Initialize CurrentPiece.Matrix using List<List<int>>
         CurrentPiece.Matrix = new List<List<int>>()
         {
-            new List<int> { 1, 1, 1 },
-            new List<int> { 1, 0, 1 }
+            new List<int> { 0, 0, 0 },
+            new List<int> { 0, -1, -1 }
         };
         CurrentPiece.CreatePiece();
 
@@ -74,21 +74,18 @@ public class Player : MonoBehaviour
 
     private void PerformAction()
     {
-        //Debug.Log($"PiecePosition {CurrentPiece.Position.x}, {CurrentPiece.Position.y}");
-        if (CurrentPiece == null)
-        {
-            return;
-        }
-        if (Map.AddPieceToMap(CurrentPiece))
-        {
-            //CurrentPiece.CreatePiece();
-
-            Debug.Log("Piece placed");
-            CurrentPiece = null;
-        }
-        else
-        {
-            Debug.Log("Cannot place piece here");
+        if (CurrentPiece != null)
+        { 
+            //Debug.Log($"PiecePosition {CurrentPiece.Position.x}, {CurrentPiece.Position.y}");
+            if (CurrentPiece.Type != PieceType.MapExtension && Map.AddPieceToMap(CurrentPiece))
+            {
+                Debug.Log("Piece placed");
+                CurrentPiece = null;
+            }
+            else if (CurrentPiece.Type == PieceType.MapExtension && Map.ExtendMap(CurrentPiece))
+            {
+                Debug.Log("Adjacent map piece");
+            }
         }
     }
 

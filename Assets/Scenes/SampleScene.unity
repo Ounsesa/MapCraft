@@ -533,7 +533,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2855323351374579040, guid: 9c82b302cccfd7441acbd2aa52a2f745, type: 3}
       propertyPath: Type
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6919223933649081333, guid: 9c82b302cccfd7441acbd2aa52a2f745, type: 3}
       propertyPath: m_Name
@@ -629,8 +629,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ce9b5c27fd427408542bb6b71c6d27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WorldPosition: {x: 0, y: 0}
   MapRender: {fileID: 648853389}
-  MapPosition: {x: 0, y: 0}
   InitialRows: 3
   InitialColumns: 5
 --- !u!4 &1851399140

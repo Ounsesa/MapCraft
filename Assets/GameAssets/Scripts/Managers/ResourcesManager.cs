@@ -25,11 +25,6 @@ enum MaterialType
     Leather     //3
 }
 
-public enum PieceType
-{
-    Resource,   //0 //1 * BiomeType.Num + BiomeType
-    Material    //1 //2 * BiomeType.Num + BiomeType
-}
 
 public class ResourcesManager : Manager
 {    

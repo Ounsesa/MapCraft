@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PieceType
+{
+    Resource,
+    Material,
+    MapExtension
+}
+
 public class Piece : WorldMatrix
 {
     public PieceType Type;
@@ -14,7 +21,7 @@ public class Piece : WorldMatrix
         {
             for (int j = 0; j < Matrix[i].Count; j++)
             {
-                if (Matrix[i][j] == 1)
+                if (Matrix[i][j] != -1)
                 {
                     Vector3 WorldPosition = new Vector3(this.WorldPosition.x + j, this.WorldPosition.y - i, 0);
                     GameObject tile = Instantiate(PiecePrefab, WorldPosition, Quaternion.identity);
