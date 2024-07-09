@@ -47,7 +47,7 @@ public class Map : WorldMatrix
                 int col = Mathf.Abs(position.x + j);
                 int row = Mathf.Abs(position.y - i);
 
-                if (Matrix[row][col] == -1 && PieceMatrix[i][j] != -1)
+                if (Matrix[row][col] == GameplayManager.INVALID_TILE && PieceMatrix[i][j] != GameplayManager.INVALID_TILE)
                 {
                     return false;
                 }
@@ -76,12 +76,11 @@ public class Map : WorldMatrix
 
         Debug.Log("Try extend map");
 
-        //If the extension is not adyacent to the map
-        if (MapExtensionPosition.x > (WorldPosition.x + Matrix[0].Count) || //Right
-            MapExtensionPosition.y < (WorldPosition.y - Matrix.Count) || //Bottom
-            (MapExtensionPosition.y - MapExtensionMatrix.Count) > (WorldPosition.y) || //Top
-            (MapExtensionPosition.x + MapExtensionMatrix[0].Count) < (WorldPosition.x)) //Left
+        if (!CheckAdjacency(mapExtension))
+        {
             return false;
+        }
+
 
         Vector2Int mapTile = MapExtensionPosition - WorldPosition;
 
@@ -105,7 +104,7 @@ public class Map : WorldMatrix
                 {
                     break;
                 }
-                if (Matrix[Mathf.Abs(mapTile.y - i)][mapTile.x + j] != -1 && MapExtensionMatrix[i][j] != -1)
+                if (Matrix[Mathf.Abs(mapTile.y - i)][mapTile.x + j] != GameplayManager.INVALID_TILE && MapExtensionMatrix[i][j] != GameplayManager.INVALID_TILE)
                 {
                     return false;
                 }
@@ -117,7 +116,7 @@ public class Map : WorldMatrix
         {
             for(int i = 0; i < mapTile.y; i++)
             {
-                List<int> NewRow = Enumerable.Repeat(-1, Matrix[0].Count).ToList();
+                List<int> NewRow = Enumerable.Repeat(GameplayManager.INVALID_TILE, Matrix[0].Count).ToList();
                 Matrix.Insert(0, NewRow);
                 WorldPosition.y++;
             }
@@ -129,7 +128,7 @@ public class Map : WorldMatrix
         {
             for (int i = 0; i < rowsToAdd; i++)
             {
-                List<int> NewRow = Enumerable.Repeat(-1, Matrix[0].Count).ToList();
+                List<int> NewRow = Enumerable.Repeat(GameplayManager.INVALID_TILE, Matrix[0].Count).ToList();
                 Matrix.Add(NewRow);
             }
         }
@@ -142,7 +141,7 @@ public class Map : WorldMatrix
             {
                 for (int i = 0; i < Matrix.Count; i++)
                 {
-                    Matrix[i].Insert(0, -1);
+                    Matrix[i].Insert(0, GameplayManager.INVALID_TILE);
                 }
 
                 WorldPosition.x--;
@@ -157,7 +156,7 @@ public class Map : WorldMatrix
             {
                 for (int j = 0; j < columnsToAdd; j++)
                 {
-                    Matrix[i].Add(-1);
+                    Matrix[i].Add(GameplayManager.INVALID_TILE);
                 }
             }
             
@@ -178,6 +177,103 @@ public class Map : WorldMatrix
         MapRender.RenderMap();
 
         return true;
+    }
+
+
+    bool CheckAdjacency(Piece mapExtension)
+    {
+        //TODO: no funciona colocar una pieza justo en la esquina
+        //hay que hacer que si el valor de un extremo donde se comprueba es -1, mover la comprobación a la siguiente tile
+
+
+        // Add the piece to the map matrix
+        List<List<int>> MapExtensionMatrix = mapExtension.Matrix;
+        Vector2Int MapExtensionPosition = mapExtension.WorldPosition;
+        int INVALID_TILE = GameplayManager.INVALID_TILE;
+
+        // Get the dimensions of both matrices
+        int mainMatrixWidth = Matrix[0].Count;
+        int mainMatrixHeight = Matrix.Count;
+        int extensionMatrixWidth = MapExtensionMatrix[0].Count;
+        int extensionMatrixHeight = MapExtensionMatrix.Count;
+
+        // Adjacency with the top of the main matrix
+        for (int i = 0; i < extensionMatrixWidth; i++)
+        {
+            if (MapExtensionMatrix[extensionMatrixHeight - 1][i] != INVALID_TILE)
+            {
+                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, -(extensionMatrixHeight - 1)); ;
+                Vector2Int tileToCheck = tilePosition + new Vector2Int(0, -1);
+
+                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                {
+                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Adjacency with the bottom of the main matrix
+        for (int i = 0; i < extensionMatrixWidth; i++)
+        {
+            if (MapExtensionMatrix[0][i] != INVALID_TILE)
+            {
+                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, 0);
+                Vector2Int tileToCheck = tilePosition + new Vector2Int(0, 1);
+
+                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                {
+                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Adjacency with the left of the main matrix
+        for (int i = 0; i < extensionMatrixHeight; i++)
+        {
+            if (MapExtensionMatrix[i][extensionMatrixWidth - 1] != INVALID_TILE)
+            {
+                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(extensionMatrixWidth - 1, -i);
+                Vector2Int tileToCheck = tilePosition + new Vector2Int(1, 0);
+
+                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                {
+                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Adjacency with the right of the main matrix
+        for (int i = 0; i < extensionMatrixHeight; i++)
+        {
+            if (MapExtensionMatrix[i][0] != INVALID_TILE)
+            {
+                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(0, -i);
+                Vector2Int tileToCheck = tilePosition + new Vector2Int(-1, 0);
+
+                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                {
+                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
 }

@@ -110,7 +110,7 @@ public class MapPreviewWindow : EditorWindow
                     EditorUtility.DisplayDialog("Error: Invalid Number", "Error: Number Too High For Existing Biomes in position (" + i + "," + j + ")", "Okey");
                     outValue = aux;
                 }
-                else if (outValue < -1)
+                else if (outValue < GameplayManager.INVALID_TILE)
                 {
                     EditorUtility.DisplayDialog("Error: Invalid Number", "Error: Invalid Number Set in position (" + i + "," + j + "), Obstacle Value Is -1", "Okey");
                     outValue = aux;

@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
         CurrentPiece.Matrix = new List<List<int>>()
         {
             new List<int> { 0, 0, 0 },
-            new List<int> { 0, -1, -1 }
+            new List<int> { 0, GameplayManager.INVALID_TILE, GameplayManager.INVALID_TILE }
         };
         CurrentPiece.CreatePiece();
 
@@ -50,6 +50,10 @@ public class Player : MonoBehaviour
         
         if (InputAction.RightClickAction.IsPressed())
         {
+            if (InputAction.MouseWheelAction.triggered)
+            {
+                Debug.Log("Acercar/alejar la cámara");
+            }
             MoveCameraAction();
         }
         else if (InputAction.PlayerAction.triggered)

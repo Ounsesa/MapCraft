@@ -21,7 +21,7 @@ public class Piece : WorldMatrix
         {
             for (int j = 0; j < Matrix[i].Count; j++)
             {
-                if (Matrix[i][j] != -1)
+                if (Matrix[i][j] != GameplayManager.INVALID_TILE)
                 {
                     Vector3 WorldPosition = new Vector3(this.WorldPosition.x + j, this.WorldPosition.y - i, 0);
                     GameObject tile = Instantiate(PiecePrefab, WorldPosition, Quaternion.identity);
