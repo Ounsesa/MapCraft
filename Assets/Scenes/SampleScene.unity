@@ -469,6 +469,10 @@ PrefabInstance:
       propertyPath: CurrentPiece
       value: 
       objectReference: {fileID: 1348351884}
+    - target: {fileID: 2391075347784195966, guid: f345b39503f8e4c4687a5c52aa7bec45, type: 3}
+      propertyPath: PieceController
+      value: 
+      objectReference: {fileID: 962494086}
     - target: {fileID: 6366500106040832561, guid: f345b39503f8e4c4687a5c52aa7bec45, type: 3}
       propertyPath: m_Name
       value: Player
@@ -512,6 +516,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c551dffaca902444ba29dbd857076a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PiecesList: []
+  Map: {fileID: 1851399139}
+  Inventory: {fileID: 5456030}
 --- !u!4 &962494087
 Transform:
   m_ObjectHideFlags: 0
@@ -675,6 +682,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WorldPosition: {x: 0, y: 0}
   MapRender: {fileID: 648853389}
+  PieceController: {fileID: 962494086}
   InitialRows: 3
   InitialColumns: 5
 --- !u!4 &1851399140
