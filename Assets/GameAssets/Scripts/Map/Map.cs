@@ -200,56 +200,70 @@ public class Map : WorldMatrix
         // Adjacency with the top of the main matrix
         for (int i = 0; i < extensionMatrixWidth; i++)
         {
-            if (MapExtensionMatrix[extensionMatrixHeight - 1][i] != INVALID_TILE)
+            for(int j = 0; j < extensionMatrixHeight; j++)
             {
-                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, -(extensionMatrixHeight - 1)); ;
-                Vector2Int tileToCheck = tilePosition + new Vector2Int(0, -1);
-
-                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                if (MapExtensionMatrix[extensionMatrixHeight - 1 - j][i] != INVALID_TILE)
                 {
-                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, -(extensionMatrixHeight - 1 - j)); ;
+                    Vector2Int tileToCheck = tilePosition + new Vector2Int(0, -1);
+
+                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
                     {
-                        return true;
+                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        {
+                            return true;
+                        }
                     }
+                    break;
                 }
             }
+            
         }
 
         // Adjacency with the bottom of the main matrix
         for (int i = 0; i < extensionMatrixWidth; i++)
         {
-            if (MapExtensionMatrix[0][i] != INVALID_TILE)
+            for( int j = 0; j < extensionMatrixHeight; j++)
             {
-                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, 0);
-                Vector2Int tileToCheck = tilePosition + new Vector2Int(0, 1);
-
-                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                if (MapExtensionMatrix[j][i] != INVALID_TILE)
                 {
-                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, -j);
+                    Vector2Int tileToCheck = tilePosition + new Vector2Int(0, 1);
+
+                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
                     {
-                        return true;
+                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        {
+                            return true;
+                        }
                     }
+                    break;
                 }
             }
+            
         }
 
         // Adjacency with the left of the main matrix
         for (int i = 0; i < extensionMatrixHeight; i++)
         {
-            if (MapExtensionMatrix[i][extensionMatrixWidth - 1] != INVALID_TILE)
+            for (int j = 0; j < extensionMatrixHeight; j++)
             {
-                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(extensionMatrixWidth - 1, -i);
-                Vector2Int tileToCheck = tilePosition + new Vector2Int(1, 0);
-
-                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                if (MapExtensionMatrix[i][extensionMatrixWidth - 1 - j] != INVALID_TILE)
                 {
-                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(extensionMatrixWidth - 1 - j, -i);
+                    Vector2Int tileToCheck = tilePosition + new Vector2Int(1, 0);
+
+                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
                     {
-                        return true;
+                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        {
+                            return true;
+                        }
                     }
+                    break;
                 }
             }
         }
@@ -257,18 +271,22 @@ public class Map : WorldMatrix
         // Adjacency with the right of the main matrix
         for (int i = 0; i < extensionMatrixHeight; i++)
         {
-            if (MapExtensionMatrix[i][0] != INVALID_TILE)
+            for (int j = 0; j < extensionMatrixHeight; j++)
             {
-                Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(0, -i);
-                Vector2Int tileToCheck = tilePosition + new Vector2Int(-1, 0);
-
-                if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                    tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                if (MapExtensionMatrix[i][j] != INVALID_TILE)
                 {
-                    if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                    Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(j, -i);
+                    Vector2Int tileToCheck = tilePosition + new Vector2Int(-1, 0);
+
+                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
                     {
-                        return true;
+                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        {
+                            return true;
+                        }
                     }
+                    break;
                 }
             }
         }
