@@ -8,6 +8,7 @@ using UnityEngine;
 public class Map : WorldMatrix
 {
     public MapRender MapRender;
+    public PieceController PieceController;
 
     public int InitialRows = 3;
     public int InitialColumns = 5;
@@ -30,6 +31,11 @@ public class Map : WorldMatrix
    
     public bool AddPieceToMap(Piece piece)
     {
+        if(PieceController.IsPieceOverlapping(piece))
+        {
+            Debug.Log("There is a piece in the spot");
+            return false;
+        }
         // Add the piece to the map matrix
         List<List<int>> PieceMatrix = piece.Matrix;
         Vector2Int position = piece.WorldPosition;

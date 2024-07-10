@@ -72,4 +72,18 @@ public class PieceController : MonoBehaviour
             yield return new WaitForSeconds(GameplayManager.LootInterval);
         }
     }
+
+    public bool IsPieceOverlapping(Piece piece)
+    {
+        for(int i = 0; i < PiecesList.Count; i++)
+        {
+            Piece OtherPiece = PiecesList[i];
+            if(OtherPiece.WorldPosition.x < piece.WorldPosition.x && OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count > piece.WorldPosition.x ||
+               OtherPiece.WorldPosition.x > piece.WorldPosition.x + piece.Matrix[0].Count && OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count < piece.WorldPosition.x + piece.Matrix[0].Count)
+            {
+                Debug.Log("Overlapping");
+            }
+        }
+        return true;
+    }
 }
