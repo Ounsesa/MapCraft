@@ -35,32 +35,5 @@ public class ResourcesManager : Manager
     }
 
 
-    public void ParseIntToResource(int value)
-    {
-        if(value < 0)
-        {
-            Debug.Log("Invalid tile");
-            return;
-        }
-        int biomeCount = GetEnumLength<BiomeType>();
-        int EnumValue = value / biomeCount;  
-        
-        switch (EnumValue)
-        {
-            case 0:
-                BiomeType biome = (BiomeType)(value % biomeCount);
-                //Debug.Log($"Resource: {biome}");
-                break;
-            case 1:
-                ResourceType resource = (ResourceType)(value % biomeCount);
-                Inventory.AddResource((value % biomeCount), 1);
-                Debug.Log($"Resource: {resource}");
-                break;
-            case 2:
-                MaterialType material = (MaterialType)(value % biomeCount);
-                Inventory.AddMaterial((value % biomeCount), 1);
-                Debug.Log($"Material: {material}");
-                break;
-        }
-    }
+    
 }

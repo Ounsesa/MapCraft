@@ -17,7 +17,8 @@ public class Player : MonoBehaviour
     private InputActions InputAction;
     public Piece CurrentPiece;
     public Map Map;
-    public float CameraSpeed = 3f; 
+    public float CameraSpeed = 3f;
+    public PieceController PieceController;
 
     private void Start()
     {
@@ -84,6 +85,7 @@ public class Player : MonoBehaviour
             if (CurrentPiece.Type != PieceType.MapExtension && Map.AddPieceToMap(CurrentPiece))
             {
                 Debug.Log("Piece placed");
+                PieceController.AddPiece(CurrentPiece);
                 CurrentPiece = null;
             }
             else if (CurrentPiece.Type == PieceType.MapExtension && Map.ExtendMap(CurrentPiece))
