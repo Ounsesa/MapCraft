@@ -9,6 +9,9 @@ public class Inventory : MonoBehaviour
     Dictionary<ResourceType, int> ResourcesList = new Dictionary<ResourceType, int>();
     Dictionary<MaterialType, int> MaterialsList = new Dictionary<MaterialType, int>();
 
+    //Piece type [Resource/Material], int [id], float [amount]
+    public event System.Action<PieceType, int, float> OnItemAmountChanged;
+
 
     // Start is called before the first frame update
     void Start()
@@ -27,21 +30,25 @@ public class Inventory : MonoBehaviour
     public void AddResource(int resource, int amount)
     {
         ResourcesList[(ResourceType)resource] += amount;
+        OnItemAmountChanged?.Invoke(PieceType.Resource, resource, ResourcesList[(ResourceType)resource]);
     }
 
     public void AddMaterial(int material, int amount)
     {
         MaterialsList[(MaterialType)material] += amount;
+        OnItemAmountChanged?.Invoke(PieceType.Material, material, MaterialsList[(MaterialType)material]);
     }
 
     public void RemoveResource(int resource, int amount)
     {
         ResourcesList[(ResourceType)resource] -= amount;
+        OnItemAmountChanged?.Invoke(PieceType.Resource, resource, ResourcesList[(ResourceType)resource]);
     }
 
     public void RemoveMaterial(int material, int amount)
     {
         MaterialsList[(MaterialType)material] -= amount;
+        OnItemAmountChanged?.Invoke(PieceType.Material, material, MaterialsList[(MaterialType)material]);
     }
 
     public void PrintInventory()

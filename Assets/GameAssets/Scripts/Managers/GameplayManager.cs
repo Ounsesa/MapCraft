@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class GameplayManager : Manager
 {
-    public static int INVALID_TILE = -1;
+    public static GameplayManager Instance;
 
-    public float MaxCameraSize = 5f;
-    public float MinCameraSize = 20f;
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(Instance.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
 
-    public Map Map;
-    public Inventory Inventory;
+        Instance = this;
+    }
+   
 
-    public static float LootInterval = 5.0f; // Interval in seconds between looting
 
 }

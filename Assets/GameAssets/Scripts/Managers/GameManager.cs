@@ -12,6 +12,16 @@ public class GameManager : Manager
     [Header("Inputs")]
     public ActionsName ActionsName;
 
+
+    public int INVALID_TILE = -1;
+
+    public float MaxCameraSize = 20f;
+    public float MinCameraSize = 5f;
+
+    public string GameDataPath = "Assets/GameAssets/GameData/";
+
+    public float LootInterval = 5.0f; // Interval in seconds between looting
+
     void Awake()
     {
         if (Instance != null)

@@ -11,7 +11,7 @@ public class PieceController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Invoke("StartLootingWithDelay", GameplayManager.LootInterval);
+        Invoke("StartLootingWithDelay", GameManager.Instance.LootInterval);
     }
     void StartLootingWithDelay()
     {
@@ -39,7 +39,7 @@ public class PieceController : MonoBehaviour
                 {
                     for (int k = 0; k < PiecesList[i].Matrix[j].Count; k++)
                     {
-                        if (PiecesList[i].Matrix[j][k] != GameplayManager.INVALID_TILE)
+                        if (PiecesList[i].Matrix[j][k] != GameManager.Instance.INVALID_TILE)
                         {
                             int value = Map.Matrix[MapPosition.y + j][MapPosition.x + k];
 
@@ -69,7 +69,7 @@ public class PieceController : MonoBehaviour
         while (true)
         {
             LootResources();
-            yield return new WaitForSeconds(GameplayManager.LootInterval);
+            yield return new WaitForSeconds(GameManager.Instance.LootInterval);
         }
     }
 

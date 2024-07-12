@@ -10,6 +10,8 @@ public class Map : WorldMatrix
     public MapRender MapRender;
     public PieceController PieceController;
 
+    public string MapName = "InitialMap.csv";
+
     public int InitialRows = 3;
     public int InitialColumns = 5;
 
@@ -24,18 +26,18 @@ public class Map : WorldMatrix
 
     private void InitializeMap()
     {
-        Matrix = CSVParser.ParseCSVToMatrix("Assets/GameAssets/Scripts/Map/InitialMap.csv");
+        CSVParser.ParseCSVToMatrix(GameManager.Instance.GameDataPath + MapName, out Matrix);
         MapRender.RenderMap();
     }
 
    
     public bool AddPieceToMap(Piece piece)
     {
-        if(PieceController.IsPieceOverlapping(piece))
-        {
-            Debug.Log("There is a piece in the spot");
-            return false;
-        }
+        //if(PieceController.IsPieceOverlapping(piece))
+        //{
+        //    Debug.Log("There is a piece in the spot");
+        //    return false;
+        //}
         // Add the piece to the map matrix
         List<List<int>> PieceMatrix = piece.Matrix;
         Vector2Int position = piece.WorldPosition;
@@ -53,7 +55,7 @@ public class Map : WorldMatrix
                 int col = Mathf.Abs(position.x + j);
                 int row = Mathf.Abs(position.y - i);
 
-                if (Matrix[row][col] == GameplayManager.INVALID_TILE && PieceMatrix[i][j] != GameplayManager.INVALID_TILE)
+                if (Matrix[row][col] == GameManager.Instance.INVALID_TILE && PieceMatrix[i][j] != GameManager.Instance.INVALID_TILE)
                 {
                     return false;
                 }
@@ -110,7 +112,7 @@ public class Map : WorldMatrix
                 {
                     break;
                 }
-                if (Matrix[Mathf.Abs(mapTile.y - i)][mapTile.x + j] != GameplayManager.INVALID_TILE && MapExtensionMatrix[i][j] != GameplayManager.INVALID_TILE)
+                if (Matrix[Mathf.Abs(mapTile.y - i)][mapTile.x + j] != GameManager.Instance.INVALID_TILE && MapExtensionMatrix[i][j] != GameManager.Instance.INVALID_TILE)
                 {
                     return false;
                 }
@@ -122,7 +124,7 @@ public class Map : WorldMatrix
         {
             for(int i = 0; i < mapTile.y; i++)
             {
-                List<int> NewRow = Enumerable.Repeat(GameplayManager.INVALID_TILE, Matrix[0].Count).ToList();
+                List<int> NewRow = Enumerable.Repeat(GameManager.Instance.INVALID_TILE, Matrix[0].Count).ToList();
                 Matrix.Insert(0, NewRow);
                 WorldPosition.y++;
             }
@@ -134,7 +136,7 @@ public class Map : WorldMatrix
         {
             for (int i = 0; i < rowsToAdd; i++)
             {
-                List<int> NewRow = Enumerable.Repeat(GameplayManager.INVALID_TILE, Matrix[0].Count).ToList();
+                List<int> NewRow = Enumerable.Repeat(GameManager.Instance.INVALID_TILE, Matrix[0].Count).ToList();
                 Matrix.Add(NewRow);
             }
         }
@@ -147,7 +149,7 @@ public class Map : WorldMatrix
             {
                 for (int i = 0; i < Matrix.Count; i++)
                 {
-                    Matrix[i].Insert(0, GameplayManager.INVALID_TILE);
+                    Matrix[i].Insert(0, GameManager.Instance.INVALID_TILE);
                 }
 
                 WorldPosition.x--;
@@ -162,7 +164,7 @@ public class Map : WorldMatrix
             {
                 for (int j = 0; j < columnsToAdd; j++)
                 {
-                    Matrix[i].Add(GameplayManager.INVALID_TILE);
+                    Matrix[i].Add(GameManager.Instance.INVALID_TILE);
                 }
             }
             
@@ -195,7 +197,7 @@ public class Map : WorldMatrix
         // Add the piece to the map matrix
         List<List<int>> MapExtensionMatrix = mapExtension.Matrix;
         Vector2Int MapExtensionPosition = mapExtension.WorldPosition;
-        int INVALID_TILE = GameplayManager.INVALID_TILE;
+        int INVALID_TILE = GameManager.Instance.INVALID_TILE;
 
         // Get the dimensions of both matrices
         int mainMatrixWidth = Matrix[0].Count;

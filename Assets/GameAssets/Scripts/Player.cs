@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     public Piece CurrentPiece;
     public Map Map;
     public float CameraSpeed = 3f;
+    public float CameraZoomSpeed = 5f;
     public PieceController PieceController;
 
     private void Start()
@@ -30,7 +31,7 @@ public class Player : MonoBehaviour
         CurrentPiece.Matrix = new List<List<int>>()
         {
             new List<int> { 0, 0, 0 },
-            new List<int> { 0, GameplayManager.INVALID_TILE, GameplayManager.INVALID_TILE }
+            new List<int> { 0, GameManager.Instance.INVALID_TILE, GameManager.Instance.INVALID_TILE }
         };
         CurrentPiece.CreatePiece();
 
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
         {
             if (InputAction.MouseWheelAction.triggered)
             {
+                CameraZoomAction();
                 Debug.Log("Acercar/alejar la cámara");
             }
             MoveCameraAction();
@@ -92,6 +94,24 @@ public class Player : MonoBehaviour
             {
                 Debug.Log("Adjacent map piece");
             }
+        }
+    }
+
+    private void CameraZoomAction()
+    {
+        float MouseWheelValue = InputAction.MouseWheelAction.ReadValue<float>();
+        if(MouseWheelValue < 0) 
+        {
+            float CurrentSize = Camera.main.GetComponent<Camera>().orthographicSize;
+            float NewSize = Mathf.Min(CurrentSize + CameraZoomSpeed * Time.deltaTime, GameManager.Instance.MaxCameraSize);
+            Debug.Log(NewSize);
+            Camera.main.GetComponent<Camera>().orthographicSize = NewSize;
+        }
+        else 
+        {
+            float CurrentSize = Camera.main.GetComponent<Camera>().orthographicSize;
+            float NewSize = Mathf.Max(CurrentSize - CameraZoomSpeed * Time.deltaTime, GameManager.Instance.MinCameraSize);
+            Camera.main.GetComponent<Camera>().orthographicSize = NewSize;
         }
     }
 

@@ -5,13 +5,14 @@ using UnityEditor;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager.Requests;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 public class MapPreviewWindow : EditorWindow
 {
     static MapPreviewWindow window;
     private List<List<int>> MapMatrix;
 
-    private string MapFilePath = "Assets/GameAssets/Scripts/Map/";
+    private string MapFilePath = "Assets/GameAssets/GameData/";
     private string MapFileName = "InitialMap.csv";
 
     private bool MapSelected = false;
@@ -49,7 +50,7 @@ public class MapPreviewWindow : EditorWindow
         if (GUILayout.Button("Open Map"))
         {
             MapSelected = true;
-            MapMatrix = CSVParser.ParseCSVToMatrix(MapFilePath + MapFileName);
+            CSVParser.ParseCSVToMatrix(MapFilePath + MapFileName, out MapMatrix);
         }
 
         EditorGUILayout.EndVertical();
@@ -110,7 +111,7 @@ public class MapPreviewWindow : EditorWindow
                     EditorUtility.DisplayDialog("Error: Invalid Number", "Error: Number Too High For Existing Biomes in position (" + i + "," + j + ")", "Okey");
                     outValue = aux;
                 }
-                else if (outValue < GameplayManager.INVALID_TILE)
+                else if (outValue < GameManager.Instance.INVALID_TILE)
                 {
                     EditorUtility.DisplayDialog("Error: Invalid Number", "Error: Invalid Number Set in position (" + i + "," + j + "), Obstacle Value Is -1", "Okey");
                     outValue = aux;
