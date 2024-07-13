@@ -21,13 +21,12 @@ public class InventoryItem : MonoBehaviour
     {
         Inventory.OnItemAmountChanged += UpdateItemUI;
     }
-    private void UpdateItemUI(PieceType type, int id, float amount)
+    private void UpdateItemUI(PieceType type, int id, int amount)
     {
         if(Id == id && ItemType == type)
         {
             TextMeshProUGUI textMeshPro = InventoryQuantityText.GetComponent<TextMeshProUGUI>();
             textMeshPro.text = "" + amount;
-        }
-        
+        }        
     }
 }
