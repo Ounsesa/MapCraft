@@ -51,6 +51,10 @@ public class Inventory : MonoBehaviour
         OnAssetTileAmountChanged?.Invoke(pieceType, AssetsTileList[pieceType]);
     }
 
+    public int GetAssetTileAmount(PieceType pieceType) 
+    {
+        return AssetsTileList[pieceType];
+    }
     public void RemoveResource(int resource, int amount)
     {
         ResourcesList[(ResourceType)resource] -= amount;

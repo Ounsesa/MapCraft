@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum PieceType
 {
-    Resource,
     Material,
+    Resource,
     MapExtension
 }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TileTypeSelection : MonoBehaviour
 {
@@ -16,10 +17,16 @@ public class TileTypeSelection : MonoBehaviour
     [SerializeField]
     private Inventory Inventory;
 
+    private Button Button;
+
+    public CraftingGrid CraftingGrid;
+
     // Start is called before the first frame update
     void Awake()
     {
         Inventory.OnAssetTileAmountChanged += UpdateItemUI;
+        Button = GetComponent<Button>();
+        Button.onClick.AddListener(SelectCraftType);
     }
     private void Start()
     {
@@ -35,5 +42,11 @@ public class TileTypeSelection : MonoBehaviour
             textMeshPro.text = "" + CurrentAmount;
         }
 
+    }
+
+    private void SelectCraftType()
+    {
+        CraftingGrid.RestartCraft();
+        CraftingGrid.CraftType = ItemType;
     }
 }
