@@ -8,17 +8,27 @@ public class CraftingGrid : MonoBehaviour
 {
     public PieceType CraftType;
     public Inventory Inventory;
+    public PieceController PieceController;
 
-    // Initialize a 3x3 grid of integers
-    private int[,] Grid = new int[3, 3];
+    // Initialize a 3x3 grid of integers using List<List<int>>
+    public List<List<int>> Grid = new List<List<int>>
+    {
+        new List<int> {0, 0, 0},
+        new List<int> {0, 0, 0},
+        new List<int> {0, 0, 0}
+    };
 
-    private int NeededTiles = 0;
-    
+    private int SelectedTiles = 0;
+    public int MinTilesForCraft = 4;
+
     public List<CraftingTile> CraftingTileList = new List<CraftingTile>();
+    public List<Vector2Int> NotAdjacentTilesList = new List<Vector2Int>();
+
+    public bool CanCraft = false;
 
     public void Awake()
     {
-        for(int i = 0; i < CraftingTileList.Count; i++) 
+        for (int i = 0; i < CraftingTileList.Count; i++)
         {
             CraftingTileList[i].CraftingGrid = this;
         }
@@ -26,32 +36,114 @@ public class CraftingGrid : MonoBehaviour
 
     public void ActivateTile(Vector2Int Position, bool Activated)
     {
-        Grid[Position.x, Position.y] = Activated ? 1 : 0;
+        Grid[Position.x][Position.y] = Activated ? 1 : 0;
 
-        NeededTiles += Activated ? 1 : -1;
+        SelectedTiles += Activated ? 1 : -1;
 
-        if (ValidCraft())
-        {
-            Debug.Log("ValidCraft");
-        }
+        CheckAdjacency(Position, Activated);
+
+        CanCraft = ValidCraft();
     }
 
     public void RestartCraft()
     {
-        NeededTiles = 0;
+        SelectedTiles = 0;
         for (int i = 0; i < CraftingTileList.Count; i++)
         {
             CraftingTileList[i].Deselect();
-            Grid[CraftingTileList[i].GridPosition.x, CraftingTileList[i].GridPosition.y] = 0;
+            Grid[CraftingTileList[i].GridPosition.x][CraftingTileList[i].GridPosition.y] = 0;
         }
     }
 
     private bool ValidCraft()
     {
-        if (Inventory.GetAssetTileAmount(CraftType) < NeededTiles)
+        if (NotAdjacentTilesList.Count > 0)
+        {
+            Debug.Log("Not adjacent");
+            return false;
+        }
+        if (SelectedTiles < MinTilesForCraft)
         {
             return false;
         }
+        if (Inventory.GetAssetTileAmount(CraftType) < SelectedTiles)
+        {
+            return false;
+        }
+
         return true;
+    }
+
+    private void CheckAdjacency(Vector2Int Position, bool Activated)
+    {
+        if (Activated)
+        {
+            bool IsAdjacent = false;
+
+            Vector2Int AdjacentPosition = new Vector2Int(Position.x + 1, Position.y);
+            if (AdjacentPosition.x < Grid.Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                IsAdjacent = true;
+                if (NotAdjacentTilesList.Contains(AdjacentPosition))
+                {
+                    NotAdjacentTilesList.Remove(AdjacentPosition);
+                }
+            }
+            AdjacentPosition = new Vector2Int(Position.x - 1, Position.y);
+            if (AdjacentPosition.x >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                IsAdjacent = true;
+                if (NotAdjacentTilesList.Contains(AdjacentPosition))
+                {
+                    NotAdjacentTilesList.Remove(AdjacentPosition);
+                }
+            }
+            AdjacentPosition = new Vector2Int(Position.x, Position.y + 1);
+            if (AdjacentPosition.y < Grid[0].Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                IsAdjacent = true;
+                if (NotAdjacentTilesList.Contains(AdjacentPosition))
+                {
+                    NotAdjacentTilesList.Remove(AdjacentPosition);
+                }
+            }
+            AdjacentPosition = new Vector2Int(Position.x, Position.y - 1);
+            if (AdjacentPosition.y >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                IsAdjacent = true;
+                if (NotAdjacentTilesList.Contains(AdjacentPosition))
+                {
+                    NotAdjacentTilesList.Remove(AdjacentPosition);
+                }
+            }
+
+            if (!IsAdjacent)
+            {
+                NotAdjacentTilesList.Add(Position);
+            }
+        }
+        else
+        {
+            Vector2Int AdjacentPosition = new Vector2Int(Position.x + 1, Position.y);
+            if (AdjacentPosition.x < Grid.Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                CheckAdjacency(AdjacentPosition, true);
+            }
+            AdjacentPosition = new Vector2Int(Position.x - 1, Position.y);
+            if (AdjacentPosition.x >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                CheckAdjacency(AdjacentPosition, true);
+            }
+            AdjacentPosition = new Vector2Int(Position.x, Position.y + 1);
+            if (AdjacentPosition.y < Grid[0].Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                CheckAdjacency(AdjacentPosition, true);
+            }
+            AdjacentPosition = new Vector2Int(Position.x, Position.y - 1);
+            if (AdjacentPosition.y >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            {
+                CheckAdjacency(AdjacentPosition, true);
+            }
+        }
     }
 }

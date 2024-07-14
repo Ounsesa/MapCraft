@@ -15,6 +15,18 @@ public class Piece : WorldMatrix
     public GameObject PiecePrefab;
     List<GameObject> Tiles = new List<GameObject>();
 
+    //public Piece(PieceType Type, Vector2Int WorldPosition, List<List<int>> Matrix)
+    //{
+    //    this.Type = Type;
+    //    this.WorldPosition = WorldPosition;
+    //    this.Matrix = Matrix;
+    //}
+    //public Piece(PieceType Type, List<List<int>> Matrix)
+    //{
+    //    this.Type = Type;
+    //    WorldPosition = new Vector2Int(0,0);
+    //    this.Matrix = Matrix;
+    //}
     public void CreatePiece()
     {
         for (int i = 0; i < Matrix.Count; i++)

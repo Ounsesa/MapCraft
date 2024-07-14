@@ -1640,6 +1640,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6366500106040832561, guid: f345b39503f8e4c4687a5c52aa7bec45, type: 3}
   m_PrefabInstance: {fileID: 720044508}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &720044511 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2391075347784195966, guid: f345b39503f8e4c4687a5c52aa7bec45, type: 3}
+  m_PrefabInstance: {fileID: 720044508}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720044509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 826a61a5f690fdc4e9454f20c71b410b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &759342405 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7859645492990844674, guid: 7f7bc7aa21879c34cb5938be39c4df20, type: 3}
@@ -2293,9 +2304,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c551dffaca902444ba29dbd857076a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PiecesList: []
+  PlacedPiecesList: []
+  PiecesToPlaceList: []
   Map: {fileID: 1851399139}
   Inventory: {fileID: 5456030}
+  Player: {fileID: 720044511}
 --- !u!4 &962494087
 Transform:
   m_ObjectHideFlags: 0
@@ -3050,6 +3063,7 @@ GameObject:
   - component: {fileID: 1505093443}
   - component: {fileID: 1505093442}
   - component: {fileID: 1505093441}
+  - component: {fileID: 1505093444}
   m_Layer: 0
   m_Name: CraftingButton
   m_TagString: Untagged
@@ -3160,6 +3174,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1505093439}
   m_CullTransparentMesh: 1
+--- !u!114 &1505093444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505093439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4551ed3e3d8073344a9f4d596038e757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid: {fileID: 496836591640074574}
+  PieceController: {fileID: 962494086}
 --- !u!1 &1516770142
 GameObject:
   m_ObjectHideFlags: 0
@@ -4056,6 +4084,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CraftType: 0
   Inventory: {fileID: 5456030}
+  PieceController: {fileID: 962494086}
+  MinTilesForCraft: 4
   CraftingTileList:
   - {fileID: 9193481749058313672}
   - {fileID: 2015797730}
@@ -4066,6 +4096,8 @@ MonoBehaviour:
   - {fileID: 1987458832}
   - {fileID: 855527767}
   - {fileID: 1248140991}
+  NotAdjacentTilesList: []
+  CanCraft: 0
 --- !u!1001 &3654686787672737681
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -28,11 +28,12 @@ public class Player : MonoBehaviour
 
 
         // Initialize CurrentPiece.Matrix using List<List<int>>
-        CurrentPiece.Matrix = new List<List<int>>()
+        CurrentPiece.Matrix= new List<List<int>>()
         {
             new List<int> { 0, 0, 0 },
             new List<int> { 0, GameManager.Instance.INVALID_TILE, GameManager.Instance.INVALID_TILE }
         };
+        
         CurrentPiece.CreatePiece();
 
     }
