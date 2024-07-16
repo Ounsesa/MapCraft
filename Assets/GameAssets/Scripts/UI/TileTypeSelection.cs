@@ -20,6 +20,7 @@ public class TileTypeSelection : MonoBehaviour
     private Button Button;
 
     public CraftingGrid CraftingGrid;
+    public TileTypeSelection OtherType;
 
     // Start is called before the first frame update
     void Awake()
@@ -48,5 +49,9 @@ public class TileTypeSelection : MonoBehaviour
     {
         CraftingGrid.RestartCraft();
         CraftingGrid.CraftType = ItemType;
+        GetComponent<Image>().color = Color.yellow;
+        OtherType.GetComponent<Image>().color = Color.gray;
+
+
     }
 }

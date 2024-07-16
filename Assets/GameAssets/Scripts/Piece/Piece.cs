@@ -15,18 +15,37 @@ public class Piece : WorldMatrix
     public GameObject PiecePrefab;
     List<GameObject> Tiles = new List<GameObject>();
 
-    //public Piece(PieceType Type, Vector2Int WorldPosition, List<List<int>> Matrix)
+    //public Piece(PieceType Type, GameObject PiecePrefab, Vector2Int WorldPosition, List<List<int>> Matrix)
     //{
     //    this.Type = Type;
     //    this.WorldPosition = WorldPosition;
+    //    this.PiecePrefab = PiecePrefab;
     //    this.Matrix = Matrix;
+    //    Tiles = new List<GameObject>();
     //}
-    //public Piece(PieceType Type, List<List<int>> Matrix)
+    //public Piece(PieceType Type, GameObject PiecePrefab, List<List<int>> Matrix)
     //{
     //    this.Type = Type;
-    //    WorldPosition = new Vector2Int(0,0);
+    //    WorldPosition = new Vector2Int(0, 0);
+    //    this.PiecePrefab = PiecePrefab;
     //    this.Matrix = Matrix;
+    //    Tiles = new List<GameObject>();
     //}
+
+    public void InitPiece(PieceType Type, GameObject PiecePrefab, List<List<int>> Matrix)
+    {
+        this.Type = Type;
+        WorldPosition = new Vector2Int(0, 0);
+        //this.PiecePrefab = PiecePrefab;
+        this.Matrix = Matrix;
+    }
+    public void InitPiece(PieceType Type, GameObject PiecePrefab, Vector2Int WorldPosition, List<List<int>> Matrix)
+    {
+        this.Type = Type;
+        this.WorldPosition = WorldPosition;
+        //this.PiecePrefab = PiecePrefab;
+        this.Matrix = Matrix;
+    }
     public void CreatePiece()
     {
         for (int i = 0; i < Matrix.Count; i++)
@@ -37,8 +56,16 @@ public class Piece : WorldMatrix
                 {
                     Vector3 WorldPosition = new Vector3(this.WorldPosition.x + j, this.WorldPosition.y - i, 0);
                     GameObject tile = Instantiate(PiecePrefab, WorldPosition, Quaternion.identity);
-                    tile.transform.SetParent(this.transform);
-                    Tiles.Add(tile);
+                    tile.transform.SetParent(transform);
+                    if(Type == PieceType.Resource)
+                    {
+                        tile.GetComponent<SpriteRenderer>().color = Color.white;
+                    }
+                    else if(Type == PieceType.Material)
+                    {
+                        tile.GetComponent<SpriteRenderer>().color = Color.black;
+                    }
+                    Tiles.Add(tile);                    
                 }
             }
         }

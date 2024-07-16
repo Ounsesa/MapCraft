@@ -55,16 +55,16 @@ public class TileCraftingOption : MonoBehaviour
         {
             int auxRemoveAmount = AmountToCraft;
             CurrentAmount -= auxRemoveAmount;
-            AmountToCraft *= 2;
+            AmountToCraft = Mathf.FloorToInt(AmountToCraft * 1.2f);
             if (ItemType == PieceType.Resource)
             {
                 Inventory.RemoveResource(Id, auxRemoveAmount);
-                Inventory.AddAssetTile(PieceType.Resource, 1);
+                Inventory.AddAssetTile(PieceType.Material, 1);
             }
             else if(ItemType == PieceType.Material)
             {
                 Inventory.RemoveMaterial(Id, auxRemoveAmount);
-                Inventory.AddAssetTile(PieceType.Material, 1);
+                Inventory.AddAssetTile(PieceType.Resource, 1);
             }
             Debug.Log("Craft");
         }

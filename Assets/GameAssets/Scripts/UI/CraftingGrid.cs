@@ -13,9 +13,9 @@ public class CraftingGrid : MonoBehaviour
     // Initialize a 3x3 grid of integers using List<List<int>>
     public List<List<int>> Grid = new List<List<int>>
     {
-        new List<int> {0, 0, 0},
-        new List<int> {0, 0, 0},
-        new List<int> {0, 0, 0}
+        new List<int> {-1, -1, -1},
+        new List<int> {-1, -1, -1},
+        new List<int> {-1, -1, -1}
     };
 
     private int SelectedTiles = 0;
@@ -36,7 +36,7 @@ public class CraftingGrid : MonoBehaviour
 
     public void ActivateTile(Vector2Int Position, bool Activated)
     {
-        Grid[Position.x][Position.y] = Activated ? 1 : 0;
+        Grid[Position.x][Position.y] = Activated ? 0 : -1;
 
         SelectedTiles += Activated ? 1 : -1;
 
@@ -51,7 +51,7 @@ public class CraftingGrid : MonoBehaviour
         for (int i = 0; i < CraftingTileList.Count; i++)
         {
             CraftingTileList[i].Deselect();
-            Grid[CraftingTileList[i].GridPosition.x][CraftingTileList[i].GridPosition.y] = 0;
+            Grid[CraftingTileList[i].GridPosition.x][CraftingTileList[i].GridPosition.y] = GameManager.Instance.INVALID_TILE;
         }
     }
 
@@ -74,6 +74,11 @@ public class CraftingGrid : MonoBehaviour
         return true;
     }
 
+    public void RemoveTilesUsed()
+    {
+        Inventory.RemoveAssetTile(CraftType, SelectedTiles);
+    }
+
     private void CheckAdjacency(Vector2Int Position, bool Activated)
     {
         if (Activated)
@@ -81,7 +86,7 @@ public class CraftingGrid : MonoBehaviour
             bool IsAdjacent = false;
 
             Vector2Int AdjacentPosition = new Vector2Int(Position.x + 1, Position.y);
-            if (AdjacentPosition.x < Grid.Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.x < Grid.Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 IsAdjacent = true;
                 if (NotAdjacentTilesList.Contains(AdjacentPosition))
@@ -90,7 +95,7 @@ public class CraftingGrid : MonoBehaviour
                 }
             }
             AdjacentPosition = new Vector2Int(Position.x - 1, Position.y);
-            if (AdjacentPosition.x >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.x >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 IsAdjacent = true;
                 if (NotAdjacentTilesList.Contains(AdjacentPosition))
@@ -99,7 +104,7 @@ public class CraftingGrid : MonoBehaviour
                 }
             }
             AdjacentPosition = new Vector2Int(Position.x, Position.y + 1);
-            if (AdjacentPosition.y < Grid[0].Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.y < Grid[0].Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 IsAdjacent = true;
                 if (NotAdjacentTilesList.Contains(AdjacentPosition))
@@ -108,7 +113,7 @@ public class CraftingGrid : MonoBehaviour
                 }
             }
             AdjacentPosition = new Vector2Int(Position.x, Position.y - 1);
-            if (AdjacentPosition.y >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.y >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 IsAdjacent = true;
                 if (NotAdjacentTilesList.Contains(AdjacentPosition))
@@ -125,22 +130,22 @@ public class CraftingGrid : MonoBehaviour
         else
         {
             Vector2Int AdjacentPosition = new Vector2Int(Position.x + 1, Position.y);
-            if (AdjacentPosition.x < Grid.Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.x < Grid.Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 CheckAdjacency(AdjacentPosition, true);
             }
             AdjacentPosition = new Vector2Int(Position.x - 1, Position.y);
-            if (AdjacentPosition.x >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.x >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 CheckAdjacency(AdjacentPosition, true);
             }
             AdjacentPosition = new Vector2Int(Position.x, Position.y + 1);
-            if (AdjacentPosition.y < Grid[0].Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.y < Grid[0].Count && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 CheckAdjacency(AdjacentPosition, true);
             }
             AdjacentPosition = new Vector2Int(Position.x, Position.y - 1);
-            if (AdjacentPosition.y >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 1)
+            if (AdjacentPosition.y >= 0 && Grid[AdjacentPosition.x][AdjacentPosition.y] == 0)
             {
                 CheckAdjacency(AdjacentPosition, true);
             }

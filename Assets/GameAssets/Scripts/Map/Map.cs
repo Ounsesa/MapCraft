@@ -42,7 +42,7 @@ public class Map : WorldMatrix
         List<List<int>> PieceMatrix = piece.Matrix;
         Vector2Int position = piece.WorldPosition;
 
-        if( position.x < WorldPosition.x || //Left
+        if (position.x < WorldPosition.x || //Left
             position.y > WorldPosition.y || //Top
             position.y - PieceMatrix.Count < WorldPosition.y - Matrix.Count || //Bottom
             position.x + PieceMatrix[0].Count > WorldPosition.x + Matrix[0].Count) //Right
@@ -52,7 +52,7 @@ public class Map : WorldMatrix
         {
             for (int j = 0; j < PieceMatrix[i].Count; j++)
             {
-                int col = Mathf.Abs(position.x + j);
+                int col = position.x + j;
                 int row = Mathf.Abs(position.y - i);
 
                 if (Matrix[row][col] == GameManager.Instance.INVALID_TILE && PieceMatrix[i][j] != GameManager.Instance.INVALID_TILE)
@@ -60,18 +60,7 @@ public class Map : WorldMatrix
                     return false;
                 }
             }
-        }
-
-        for (int i = 0; i < PieceMatrix.Count; i++)
-        {
-            for (int j = 0; j < PieceMatrix[i].Count; j++)
-            {
-                int col = Mathf.Abs(position.x + j);
-                int row = Mathf.Abs(position.y - i);
-                
-                Matrix[row][col] += PieceMatrix[i][j] * (( (int)piece.Type + 1 ) * 4);                
-            }
-        }
+        }        
 
         return true;
     }

@@ -15,6 +15,7 @@ enum PlayerState
 public class Player : MonoBehaviour
 {
     private InputActions InputAction;
+    [HideInInspector]
     public Piece CurrentPiece;
     public Map Map;
     public float CameraSpeed = 3f;
@@ -24,16 +25,18 @@ public class Player : MonoBehaviour
     private void Start()
     {
         PlayerInput playerInput = GetComponent<PlayerInput>();
-        InputAction = GameManager.Instance.InputManager.RegisterInputActionsPlayer(playerInput, this);
-
+        InputAction = GameManager.Instance.InputManager.RegisterInputActionsPlayer(playerInput, this);        
 
         // Initialize CurrentPiece.Matrix using List<List<int>>
-        CurrentPiece.Matrix= new List<List<int>>()
+        List<List<int>> Matrix = new List<List<int>>()
         {
             new List<int> { 0, 0, 0 },
             new List<int> { 0, GameManager.Instance.INVALID_TILE, GameManager.Instance.INVALID_TILE }
         };
-        
+
+        GameObject tile = Instantiate(PieceController.PiecePrefab);
+        CurrentPiece = tile.GetComponent<Piece>();
+        CurrentPiece.InitPiece(PieceType.Material, PieceController.PiecePrefab, Matrix);
         CurrentPiece.CreatePiece();
 
     }

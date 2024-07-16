@@ -9,6 +9,8 @@ public class PieceController : MonoBehaviour
     public Map Map;
     public Inventory Inventory;
     public Player Player;
+    public GameObject PiecePrefab;
+
 
     // Start is called before the first frame update
     void Start()
