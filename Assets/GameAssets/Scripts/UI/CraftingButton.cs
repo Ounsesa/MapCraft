@@ -8,16 +8,16 @@ public class CraftingButton : MonoBehaviour
 {
     public CraftingGrid grid;
     public PieceController PieceController;
+    public GameObject CraftingUI;
 
     private void Awake()
     {
         GetComponent<Button>().onClick.AddListener(TryToCraft);
     }
-    private void TryToCraft()
+    protected virtual void TryToCraft()
     {
         if(grid.CanCraft)
         {
-
             List<List<int>> trimmedGrid = TrimGrid(grid.Grid);
 
             GameObject tile = Instantiate(PieceController.PiecePrefab);
@@ -26,6 +26,7 @@ public class CraftingButton : MonoBehaviour
             PieceController.SavePiece(piece);
             grid.RemoveTilesUsed();
             grid.RestartCraft();
+            CraftingUI.SetActive(!CraftingUI.activeSelf);
             Debug.Log("Can craft");
         }
         else 
@@ -34,7 +35,7 @@ public class CraftingButton : MonoBehaviour
         }
     }
 
-    private List<List<int>> TrimGrid(List<List<int>> grid)
+    protected List<List<int>> TrimGrid(List<List<int>> grid)
     {
         // Step 1: Identify rows to remove
         HashSet<int> rowsToRemove = new HashSet<int>();

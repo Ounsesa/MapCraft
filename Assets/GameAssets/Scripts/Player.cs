@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public float CameraSpeed = 3f;
     public float CameraZoomSpeed = 5f;
     public PieceController PieceController;
+    public MapCraftingButton MapCraftingButton;
 
     private void Start()
     {
@@ -97,6 +98,8 @@ public class Player : MonoBehaviour
             else if (CurrentPiece.Type == PieceType.MapExtension && Map.ExtendMap(CurrentPiece))
             {
                 Debug.Log("Adjacent map piece");
+                Destroy(MapCraftingButton.CurrentMapExtension);
+                CurrentPiece = null;
             }
         }
     }

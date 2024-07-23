@@ -10,10 +10,14 @@ public class Inventory : MonoBehaviour
     Dictionary<MaterialType, int> MaterialsList = new Dictionary<MaterialType, int>();
     Dictionary<PieceType, int> AssetsTileList = new Dictionary<PieceType, int>();
 
+    Dictionary<BiomeType, int> MapExtensionTileList = new Dictionary<BiomeType, int>();
+
     //Piece type [Resource/Material], int [id], int [amount]
     public event System.Action<PieceType, int, int> OnItemAmountChanged;
     //Piece type [Resource/Material], int [id]
     public event System.Action<PieceType, int> OnAssetTileAmountChanged;
+    //Piece type [Resource/Material], int [id]
+    public event System.Action<BiomeType, int> OnMapExtensionTileAmountChanged;
 
 
     // Start is called before the first frame update
@@ -31,6 +35,11 @@ public class Inventory : MonoBehaviour
 
         AssetsTileList.Add(PieceType.Resource, 0);
         AssetsTileList.Add(PieceType.Material, 0);
+
+        for (int i = 0; i < ResourcesManager.GetEnumLength<BiomeType>(); i++)
+        {
+            MapExtensionTileList.Add((BiomeType)i, 0);
+        }
     }
 
     public void AddResource(int resource, int amount)
@@ -71,6 +80,18 @@ public class Inventory : MonoBehaviour
     {
         MaterialsList[(MaterialType)material] -= amount;
         OnItemAmountChanged?.Invoke(PieceType.Material, material, MaterialsList[(MaterialType)material]);
+    }
+
+
+    public void AddMapExtensionTile(BiomeType type, int amount)
+    {
+        MapExtensionTileList[type] += amount;
+        OnMapExtensionTileAmountChanged?.Invoke(type, MapExtensionTileList[type]);
+    }
+    public void RemoveMapExtensionTile(BiomeType type, int amount)
+    {
+        MapExtensionTileList[type] -= amount;
+        OnMapExtensionTileAmountChanged?.Invoke(type, MapExtensionTileList[type]);
     }
 
     public void PrintInventory()

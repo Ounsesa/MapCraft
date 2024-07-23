@@ -65,6 +65,24 @@ public class Piece : WorldMatrix
                     {
                         tile.GetComponent<SpriteRenderer>().color = Color.black;
                     }
+                    else if(Type == PieceType.MapExtension)
+                    {
+                        switch(Matrix[i][j])
+                        {
+                            case 0:
+                                tile.GetComponent<SpriteRenderer>().color = Color.green;
+                                break;
+                            case 1:
+                                tile.GetComponent<SpriteRenderer>().color = Color.yellow;
+                                break;
+                            case 2:
+                                tile.GetComponent<SpriteRenderer>().color = Color.grey;
+                                break;
+                            case 3:
+                                tile.GetComponent<SpriteRenderer>().color = Color.blue;
+                                break;
+                        }
+                    }
                     Tiles.Add(tile);                    
                 }
             }

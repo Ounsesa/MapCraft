@@ -7,23 +7,23 @@ using UnityEngine.UI;
 public class TileCraftingOption : MonoBehaviour
 {
     [SerializeField]
-    private PieceType ItemType;
+    protected PieceType ItemType;
 
     [SerializeField]
-    private int Id = 0;
+    protected int Id = 0;
 
     [SerializeField]
-    private Inventory Inventory;
+    protected Inventory Inventory;
 
     [SerializeField]
-    private GameObject AssetAmountText;
+    protected GameObject AssetAmountText;
 
     [SerializeField]
-    private Button CraftButton;
+    protected Button CraftButton;
 
     public int AmountToCraft = 10;
 
-    private int CurrentAmount = 0;
+    protected int CurrentAmount = 0;
     
     // Start is called before the first frame update
     void Awake()
@@ -32,13 +32,13 @@ public class TileCraftingOption : MonoBehaviour
         CraftButton.onClick.AddListener(CraftTile);
     }
 
-    private void Start()
+    protected void Start()
     {
         UpdateItemUI(ItemType, Id, CurrentAmount);
     }
 
 
-    private void UpdateItemUI(PieceType type, int id, int amount)
+    protected void UpdateItemUI(PieceType type, int id, int amount)
     {
         if (Id == id && ItemType == type)
         {
@@ -49,7 +49,7 @@ public class TileCraftingOption : MonoBehaviour
 
     }
     
-    private void CraftTile()
+    protected virtual void CraftTile()
     {
         if(CurrentAmount >= AmountToCraft)
         {
@@ -65,6 +65,11 @@ public class TileCraftingOption : MonoBehaviour
             {
                 Inventory.RemoveMaterial(Id, auxRemoveAmount);
                 Inventory.AddAssetTile(PieceType.Resource, 1);
+            }
+            else if(ItemType == PieceType.MapExtension)
+            {
+                Inventory.RemoveMaterial(Id, auxRemoveAmount);
+                Inventory.AddMapExtensionTile((BiomeType)Id, auxRemoveAmount);
             }
             Debug.Log("Craft");
         }
