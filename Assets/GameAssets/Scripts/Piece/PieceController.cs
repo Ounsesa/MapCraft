@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PieceController : MonoBehaviour
 {
@@ -98,12 +99,34 @@ public class PieceController : MonoBehaviour
         for(int i = 0; i < PlacedPiecesList.Count; i++)
         {
             Piece OtherPiece = PlacedPiecesList[i];
-            if(OtherPiece.WorldPosition.x < piece.WorldPosition.x && OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count > piece.WorldPosition.x ||
-               OtherPiece.WorldPosition.x > piece.WorldPosition.x + piece.Matrix[0].Count && OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count < piece.WorldPosition.x + piece.Matrix[0].Count)
+            if(OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count < piece.WorldPosition.x ||
+               OtherPiece.WorldPosition.y - OtherPiece.Matrix.Count > piece.WorldPosition.y)
             {
-                Debug.Log("Overlapping");
+                continue;
             }
+
+            Vector2Int Direction = piece.WorldPosition - OtherPiece.WorldPosition;
+
+            for(int j = 0; j < piece.Matrix.Count; j ++) 
+            { 
+                for(int k = 0; k < piece.Matrix[j].Count; k ++)
+                {
+                    Vector2Int AuxPosition = Direction + new Vector2Int(k, -j);
+                    if(AuxPosition.x >= OtherPiece.Matrix[0].Count ||
+                       Mathf.Abs(AuxPosition.y) >= OtherPiece.Matrix.Count)
+                    {
+                        continue;
+                    }
+                    if (OtherPiece.Matrix[Mathf.Abs(AuxPosition.y)][AuxPosition.x] != GameManager.Instance.INVALID_TILE && piece.Matrix[j][k] != GameManager.Instance.INVALID_TILE)
+                    {
+                        Debug.Log("Overlapping");
+                        return true;
+                    }
+
+                }
+            }
+
         }
-        return true;
+        return false;
     }
 }
