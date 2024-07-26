@@ -12,11 +12,9 @@ public class MapCraftingGrid : CraftingGrid
         SelectedTiles += Activated ? 1 : -1;
 
         CheckAdjacency(Position, Activated);
-
-        CanCraft = ValidCraft();
     }
 
-    protected override bool ValidCraft()
+    public override bool ValidCraft()
     {
         if (NotAdjacentTilesList.Count > 0)
         {

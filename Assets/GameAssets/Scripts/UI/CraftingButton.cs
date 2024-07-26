@@ -16,7 +16,7 @@ public class CraftingButton : MonoBehaviour
     }
     protected virtual void TryToCraft()
     {
-        if(grid.CanCraft)
+        if(grid.ValidCraft())
         {
             List<List<int>> trimmedGrid = TrimGrid(grid.Grid);
 

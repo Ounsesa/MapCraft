@@ -62,18 +62,24 @@ public class TileCraftingOption : MonoBehaviour
             AmountToCraft = Mathf.FloorToInt(AmountToCraft * 1.2f);
             if (CraftingItemType == PieceType.MaterialBuff)
             {
-                Inventory.RemoveMaterial(Id, auxRemoveAmount);
-                PieceController.CreateTimeBuffPiece(PieceType.MaterialBuff);
+                if (PieceController.CreateBuffPiece(PieceType.MaterialBuff))
+                {
+                    Inventory.RemoveMaterial(Id, auxRemoveAmount);
+                }
             }
             else if (CraftingItemType == PieceType.ResourceBuff)
             {
-                Inventory.RemoveResource(Id, auxRemoveAmount);
-                PieceController.CreateTimeBuffPiece(PieceType.ResourceBuff);
+                if (PieceController.CreateBuffPiece(PieceType.ResourceBuff))
+                {
+                    Inventory.RemoveResource(Id, auxRemoveAmount);
+                }
             }
             else if (CraftingItemType == PieceType.BiomeBuff)
             {
-                Inventory.RemoveResource(Id, auxRemoveAmount);
-                PieceController.CreateBiomeBuffPiece();
+                if (PieceController.CreateBuffPiece(PieceType.BiomeBuff))
+                {
+                    Inventory.RemoveResource(Id, auxRemoveAmount);
+                }
             }
             else if (ItemType == PieceType.Resource)
             {

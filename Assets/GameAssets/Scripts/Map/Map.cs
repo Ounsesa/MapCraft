@@ -53,8 +53,8 @@ public class Map : WorldMatrix
         {
             for (int j = 0; j < PieceMatrix[i].Count; j++)
             {
-                int col = position.x + j;
-                int row = Mathf.Abs(position.y - i);
+                int col = (position.x - WorldPosition.x) + j;
+                int row = (WorldPosition.y - position.y) + i;
 
                 if (Matrix[row][col] == GameManager.Instance.INVALID_TILE && PieceMatrix[i][j] != GameManager.Instance.INVALID_TILE)
                 {

@@ -9,7 +9,7 @@ public class MapCraftingButton : CraftingButton
     public GameObject CurrentMapExtension;
     protected override void TryToCraft()
     {
-        if (MapGrid.CanCraft)
+        if (MapGrid.ValidCraft())
         {
 
             List<List<int>> trimmedGrid = TrimGrid(MapGrid.Grid);

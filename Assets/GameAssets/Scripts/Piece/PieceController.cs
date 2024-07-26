@@ -116,8 +116,12 @@ public class PieceController : MonoBehaviour
         
     }
 
-    public void CreateTimeBuffPiece(PieceType piece)
+    public bool CreateBuffPiece(PieceType piece)
     {
+        if(Player.CurrentPiece != null)
+        {
+            return false;
+        }
         // Initialize CurrentPiece.Matrix using List<List<int>>
         List<List<int>> Matrix = new List<List<int>>()
                 {
@@ -129,21 +133,10 @@ public class PieceController : MonoBehaviour
         auxPiece.InitPiece(piece, PiecePrefab, Matrix);
         auxPiece.CreatePiece();
         Player.CurrentPiece = auxPiece;
-    }
-    public void CreateBiomeBuffPiece()
-    {
-        // Initialize CurrentPiece.Matrix using List<List<int>>
-        List<List<int>> Matrix = new List<List<int>>()
-                {
-                    new List<int> { 1 }
-                };
 
-        GameObject tile = Instantiate(PiecePrefab);
-        Piece auxPiece = tile.GetComponent<Piece>();
-        auxPiece.InitPiece(PieceType.BiomeBuff, PiecePrefab, Matrix);
-        auxPiece.CreatePiece();
-        Player.CurrentPiece = auxPiece;
+        return true;
     }
+   
 
     IEnumerator LootResourcesRoutine()
     {

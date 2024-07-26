@@ -9,6 +9,7 @@ public class CraftingGrid : MonoBehaviour
     public PieceType CraftType;
     public Inventory Inventory;
     public PieceController PieceController;
+    public Player Player;
 
     // Initialize a 3x3 grid of integers using List<List<int>>
     public List<List<int>> Grid = new List<List<int>>
@@ -23,8 +24,6 @@ public class CraftingGrid : MonoBehaviour
 
     public List<CraftingTile> CraftingTileList = new List<CraftingTile>();
     public List<Vector2Int> NotAdjacentTilesList = new List<Vector2Int>();
-
-    public bool CanCraft = false;
 
     public void Awake()
     {
@@ -42,7 +41,6 @@ public class CraftingGrid : MonoBehaviour
 
         CheckAdjacency(Position, Activated);
 
-        CanCraft = ValidCraft();
     }
 
     public void RestartCraft()
@@ -55,8 +53,12 @@ public class CraftingGrid : MonoBehaviour
         }
     }
 
-    protected virtual bool ValidCraft()
+    public virtual bool ValidCraft()
     {
+        if(Player.CurrentPiece != null)
+        {
+            return false;
+        }
         if (NotAdjacentTilesList.Count > 0)
         {
             Debug.Log("Not adjacent");
