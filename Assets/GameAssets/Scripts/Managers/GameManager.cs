@@ -20,7 +20,11 @@ public class GameManager : Manager
 
     public string GameDataPath = "Assets/GameAssets/GameData/";
 
-    public float LootInterval = 5.0f; // Interval in seconds between looting
+    [SerializeField]
+    private float ResourcesLootInterval = 5.0f; // Interval in seconds between looting
+    [SerializeField]
+    private float MaterialsLootInterval = 6.0f; // Interval in seconds between looting
+
 
     void Awake()
     {
@@ -33,5 +37,29 @@ public class GameManager : Manager
         Instance = this;
 
         InputManager = new InputManager();
+    }
+
+    public void SetLootInterval(PieceType pieceType, float LootInterval)
+    {
+        if(pieceType == PieceType.Resource)
+        {
+            ResourcesLootInterval = LootInterval;
+        }
+        else if(pieceType == PieceType.Material)
+        {
+            MaterialsLootInterval = LootInterval;
+        }
+    }
+    public float GetLootInterval(PieceType pieceType)
+    {
+        if(pieceType == PieceType.Resource)
+        {
+            return ResourcesLootInterval;
+        }
+        else if(pieceType == PieceType.Material)
+        {
+            return MaterialsLootInterval;
+        }
+        return -1;
     }
 }

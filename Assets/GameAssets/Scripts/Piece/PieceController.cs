@@ -11,21 +11,41 @@ public class PieceController : MonoBehaviour
     public Inventory Inventory;
     public Player Player;
     public GameObject PiecePrefab;
+    public BuffsController BuffsController;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        Invoke("StartLootingWithDelay", GameManager.Instance.LootInterval);
+        Invoke("StartResourcesLootingWithDelay", GameManager.Instance.GetLootInterval(PieceType.Resource));
+        Invoke("StartMaterialsLootingWithDelay", GameManager.Instance.GetLootInterval(PieceType.Material));
     }
-    void StartLootingWithDelay()
+    void StartResourcesLootingWithDelay()
     {
         StartCoroutine(LootResourcesRoutine());
+    }
+    void StartMaterialsLootingWithDelay()
+    {
+        StartCoroutine(LootMaterialsRoutine());
     }
 
     public void AddPiece(Piece Piece)
     {
         PlacedPiecesList.Add(Piece);
+
+        if(Piece.Type == PieceType.MaterialBuff)
+        {
+            GameManager.Instance.SetLootInterval(PieceType.Material, GameManager.Instance.GetLootInterval(PieceType.Material) * 0.9f);
+        }
+        else if(Piece.Type == PieceType.ResourceBuff)
+        {
+            GameManager.Instance.SetLootInterval(PieceType.Material, GameManager.Instance.GetLootInterval(PieceType.Material) * 0.9f);
+        }
+        else if(Piece.Type == PieceType.BiomeBuff)
+        {
+            BuffsController.AddMultiplier(GetBiomeType(Piece), 2);
+        }
+
         if(Player.CurrentPiece == null && PiecesToPlaceList.Count > 0 ) 
         {
             Piece NewPiece = PiecesToPlaceList[0];
@@ -33,6 +53,14 @@ public class PieceController : MonoBehaviour
             Player.CurrentPiece = NewPiece;
             NewPiece.CreatePiece();
         }
+    }
+
+    private BiomeType GetBiomeType(Piece Piece) 
+    {
+        Vector2Int Direction = Piece.WorldPosition - Map.WorldPosition;
+        Direction.y = -Direction.y;
+
+        return (BiomeType)Map.Matrix[Direction.y][Direction.x];      
     }
 
     public void SavePiece(Piece Piece)
@@ -44,43 +72,45 @@ public class PieceController : MonoBehaviour
         }
     }
 
-    void LootResources()
+    void LootResources(PieceType typeToLoot)
     {
-        Debug.Log("Loot");
+        Debug.Log("Loot" + typeToLoot);
         if(PlacedPiecesList.Count > 0)
         {
             List<List<int>> MapMatrix = Map.Matrix;
 
             for(int i = 0; i < PlacedPiecesList.Count; i++) 
-            { 
-                Vector2Int MapPosition = PlacedPiecesList[i].WorldPosition - Map.WorldPosition;
-                MapPosition.y = Mathf.Abs(MapPosition.y);
-
-                for (int j = 0; j < PlacedPiecesList[i].Matrix.Count; j++)
+            {
+                if (PlacedPiecesList[i].Type == typeToLoot ) 
                 {
-                    for (int k = 0; k < PlacedPiecesList[i].Matrix[j].Count; k++)
-                    {
-                        if (PlacedPiecesList[i].Matrix[j][k] != GameManager.Instance.INVALID_TILE)
-                        {
-                            int value = Map.Matrix[MapPosition.y + j][MapPosition.x + k];
+                    Vector2Int MapPosition = PlacedPiecesList[i].WorldPosition - Map.WorldPosition;
+                    MapPosition.y = Mathf.Abs(MapPosition.y);
 
-                            if (PlacedPiecesList[i].Type == PieceType.Resource)
+                    for (int j = 0; j < PlacedPiecesList[i].Matrix.Count; j++)
+                    {
+                        for (int k = 0; k < PlacedPiecesList[i].Matrix[j].Count; k++)
+                        {
+                            if (PlacedPiecesList[i].Matrix[j][k] != GameManager.Instance.INVALID_TILE)
                             {
-                                ResourceType resource = (ResourceType)(value);
-                                Inventory.AddResource((value), 1);
-                                Debug.Log($"Resource: {resource}");
+                                int value = Map.Matrix[MapPosition.y + j][MapPosition.x + k];
+
+                                if (PlacedPiecesList[i].Type == PieceType.Resource)
+                                {
+                                    ResourceType resource = (ResourceType)(value);
+                                    Inventory.AddResource((value), 1);
+                                    Debug.Log($"Resource: {resource}");
+                                }
+                                else if (PlacedPiecesList[i].Type == PieceType.Material)
+                                {
+                                    MaterialType material = (MaterialType)(value);
+                                    Inventory.AddMaterial((value), 1);
+                                    Debug.Log($"Material: {material}");
+                                }
                             }
-                            else if (PlacedPiecesList[i].Type == PieceType.Material)
-                            {
-                                MaterialType material = (MaterialType)(value);
-                                Inventory.AddMaterial((value), 1);
-                                Debug.Log($"Material: {material}");
-                            }                                
                         }
                     }
-                }
+                }                
             }
-
             
         }
         
@@ -89,8 +119,16 @@ public class PieceController : MonoBehaviour
     {
         while (true)
         {
-            LootResources();
-            yield return new WaitForSeconds(GameManager.Instance.LootInterval);
+            LootResources(PieceType.Resource);
+            yield return new WaitForSeconds(GameManager.Instance.GetLootInterval(PieceType.Resource));
+        }
+    }
+    IEnumerator LootMaterialsRoutine()
+    {
+        while (true)
+        {
+            LootResources(PieceType.Material);
+            yield return new WaitForSeconds(GameManager.Instance.GetLootInterval(PieceType.Material));
         }
     }
 

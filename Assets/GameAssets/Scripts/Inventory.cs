@@ -5,6 +5,7 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public ResourcesManager ResourcesManager;
+    public BuffsController BuffsController;
 
     Dictionary<ResourceType, int> ResourcesList = new Dictionary<ResourceType, int>();
     Dictionary<MaterialType, int> MaterialsList = new Dictionary<MaterialType, int>();
@@ -44,13 +45,13 @@ public class Inventory : MonoBehaviour
 
     public void AddResource(int resource, int amount)
     {
-        ResourcesList[(ResourceType)resource] += amount;
+        ResourcesList[(ResourceType)resource] += Mathf.FloorToInt(amount * BuffsController.BiomeMultiplier[(BiomeType)resource]);
         OnItemAmountChanged?.Invoke(PieceType.Resource, resource, ResourcesList[(ResourceType)resource]);
     }
 
     public void AddMaterial(int material, int amount)
     {
-        MaterialsList[(MaterialType)material] += amount;
+        MaterialsList[(MaterialType)material] += Mathf.FloorToInt(amount * BuffsController.BiomeMultiplier[(BiomeType)material]);
         OnItemAmountChanged?.Invoke(PieceType.Material, material, MaterialsList[(MaterialType)material]);
     }
 

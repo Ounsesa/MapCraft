@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public PieceController PieceController;
     public MapCraftingButton MapCraftingButton;
 
+    public List<Piece> PlaceholderPieces;
+
     private void Start()
     {
         PlayerInput playerInput = GetComponent<PlayerInput>();
@@ -74,6 +76,35 @@ public class Player : MonoBehaviour
             {
                 CurrentPiece.RotatePiece(InputAction.MouseWheelAction.ReadValue<float>() > 0 ? true : false);
             }
+        }
+
+        //Placeholder
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            CurrentPiece = PlaceholderPieces[0]; 
+            CurrentPiece.Matrix = new List<List<int>>
+            {
+                new List<int> { 0 } // Initialize the first row with a single value of 0
+            };
+            CurrentPiece.CreatePiece();
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            CurrentPiece = PlaceholderPieces[1]; 
+            CurrentPiece.Matrix = new List<List<int>>
+            {
+                new List<int> { 0 } // Initialize the first row with a single value of 0
+            };
+            CurrentPiece.CreatePiece();
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            CurrentPiece = PlaceholderPieces[2]; 
+            CurrentPiece.Matrix = new List<List<int>>
+            {
+                new List<int> { 0 } // Initialize the first row with a single value of 0
+            };
+            CurrentPiece.CreatePiece();
         }
     }
 

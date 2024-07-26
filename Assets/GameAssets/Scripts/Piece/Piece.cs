@@ -6,44 +6,28 @@ public enum PieceType
 {
     Material,
     Resource,
-    MapExtension
+    MapExtension,
+    MaterialBuff,
+    ResourceBuff,
+    BiomeBuff
 }
 
 public class Piece : WorldMatrix
 {
     public PieceType Type;
     public GameObject PiecePrefab;
-    List<GameObject> Tiles = new List<GameObject>();
-
-    //public Piece(PieceType Type, GameObject PiecePrefab, Vector2Int WorldPosition, List<List<int>> Matrix)
-    //{
-    //    this.Type = Type;
-    //    this.WorldPosition = WorldPosition;
-    //    this.PiecePrefab = PiecePrefab;
-    //    this.Matrix = Matrix;
-    //    Tiles = new List<GameObject>();
-    //}
-    //public Piece(PieceType Type, GameObject PiecePrefab, List<List<int>> Matrix)
-    //{
-    //    this.Type = Type;
-    //    WorldPosition = new Vector2Int(0, 0);
-    //    this.PiecePrefab = PiecePrefab;
-    //    this.Matrix = Matrix;
-    //    Tiles = new List<GameObject>();
-    //}
+    List<GameObject> Tiles = new List<GameObject>();    
 
     public void InitPiece(PieceType Type, GameObject PiecePrefab, List<List<int>> Matrix)
     {
         this.Type = Type;
         WorldPosition = new Vector2Int(0, 0);
-        //this.PiecePrefab = PiecePrefab;
         this.Matrix = Matrix;
     }
     public void InitPiece(PieceType Type, GameObject PiecePrefab, Vector2Int WorldPosition, List<List<int>> Matrix)
     {
         this.Type = Type;
         this.WorldPosition = WorldPosition;
-        //this.PiecePrefab = PiecePrefab;
         this.Matrix = Matrix;
     }
     public void CreatePiece()
@@ -82,6 +66,32 @@ public class Piece : WorldMatrix
                                 tile.GetComponent<SpriteRenderer>().color = Color.blue;
                                 break;
                         }
+                    }
+                    else if(Type == PieceType.BiomeBuff)
+                    {
+                        switch (Matrix[i][j])
+                        {
+                            case 0:
+                                tile.GetComponent<SpriteRenderer>().color = Color.green;
+                                break;
+                            case 1:
+                                tile.GetComponent<SpriteRenderer>().color = Color.yellow;
+                                break;
+                            case 2:
+                                tile.GetComponent<SpriteRenderer>().color = Color.grey;
+                                break;
+                            case 3:
+                                tile.GetComponent<SpriteRenderer>().color = Color.blue;
+                                break;
+                        }
+                    }
+                    else if(Type == PieceType.MaterialBuff) 
+                    { 
+                        tile.GetComponent<SpriteRenderer>().color = Color.red;
+                    }
+                    else if(Type == PieceType.ResourceBuff)
+                    {
+                        tile.GetComponent<SpriteRenderer>().color = Color.magenta;
                     }
                     Tiles.Add(tile);                    
                 }
