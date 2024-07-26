@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ShowCraftingUI : MonoBehaviour
 {
     public GameObject CraftingUI;
+    public List<GameObject> OtherCraftingUI;
     // Start is called before the first frame update
     void Awake()
     {
@@ -13,8 +14,13 @@ public class ShowCraftingUI : MonoBehaviour
     }
 
     // Update is called once per frame
-    void ToggleUIVisibility()
+    public void ToggleUIVisibility()
     {
         CraftingUI.SetActive(!CraftingUI.activeSelf);
+
+        for(int i = 0;  i < OtherCraftingUI.Count; i++) 
+        {
+            OtherCraftingUI[i].SetActive(false);
+        }
     }
 }

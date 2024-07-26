@@ -78,34 +78,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        //Placeholder
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            CurrentPiece = PlaceholderPieces[0]; 
-            CurrentPiece.Matrix = new List<List<int>>
-            {
-                new List<int> { 0 } // Initialize the first row with a single value of 0
-            };
-            CurrentPiece.CreatePiece();
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            CurrentPiece = PlaceholderPieces[1]; 
-            CurrentPiece.Matrix = new List<List<int>>
-            {
-                new List<int> { 0 } // Initialize the first row with a single value of 0
-            };
-            CurrentPiece.CreatePiece();
-        }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            CurrentPiece = PlaceholderPieces[2]; 
-            CurrentPiece.Matrix = new List<List<int>>
-            {
-                new List<int> { 0 } // Initialize the first row with a single value of 0
-            };
-            CurrentPiece.CreatePiece();
-        }
     }
 
     private void MoveCameraAction()

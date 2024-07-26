@@ -39,11 +39,11 @@ public class PieceController : MonoBehaviour
         }
         else if(Piece.Type == PieceType.ResourceBuff)
         {
-            GameManager.Instance.SetLootInterval(PieceType.Material, GameManager.Instance.GetLootInterval(PieceType.Material) * 0.9f);
+            GameManager.Instance.SetLootInterval(PieceType.Resource, GameManager.Instance.GetLootInterval(PieceType.Resource) * 0.9f);
         }
         else if(Piece.Type == PieceType.BiomeBuff)
         {
-            BuffsController.AddMultiplier(GetBiomeType(Piece), 2);
+            BuffsController.AddMultiplier(GetBiomeType(Piece), 1);
         }
 
         if(Player.CurrentPiece == null && PiecesToPlaceList.Count > 0 ) 
@@ -115,6 +115,36 @@ public class PieceController : MonoBehaviour
         }
         
     }
+
+    public void CreateTimeBuffPiece(PieceType piece)
+    {
+        // Initialize CurrentPiece.Matrix using List<List<int>>
+        List<List<int>> Matrix = new List<List<int>>()
+                {
+                    new List<int> { 1 }
+                };
+
+        GameObject tile = Instantiate(PiecePrefab);
+        Piece auxPiece = tile.GetComponent<Piece>();
+        auxPiece.InitPiece(piece, PiecePrefab, Matrix);
+        auxPiece.CreatePiece();
+        Player.CurrentPiece = auxPiece;
+    }
+    public void CreateBiomeBuffPiece()
+    {
+        // Initialize CurrentPiece.Matrix using List<List<int>>
+        List<List<int>> Matrix = new List<List<int>>()
+                {
+                    new List<int> { 1 }
+                };
+
+        GameObject tile = Instantiate(PiecePrefab);
+        Piece auxPiece = tile.GetComponent<Piece>();
+        auxPiece.InitPiece(PieceType.BiomeBuff, PiecePrefab, Matrix);
+        auxPiece.CreatePiece();
+        Player.CurrentPiece = auxPiece;
+    }
+
     IEnumerator LootResourcesRoutine()
     {
         while (true)
@@ -137,8 +167,10 @@ public class PieceController : MonoBehaviour
         for(int i = 0; i < PlacedPiecesList.Count; i++)
         {
             Piece OtherPiece = PlacedPiecesList[i];
-            if(OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count < piece.WorldPosition.x ||
-               OtherPiece.WorldPosition.y - OtherPiece.Matrix.Count > piece.WorldPosition.y)
+            if (OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count - 1 < piece.WorldPosition.x ||
+               OtherPiece.WorldPosition.y - OtherPiece.Matrix.Count - 1 > piece.WorldPosition.y ||
+               piece.WorldPosition.x + piece.Matrix[0].Count - 1 < OtherPiece.WorldPosition.x ||
+               piece.WorldPosition.y - piece.Matrix.Count - 1 > OtherPiece.WorldPosition.y)
             {
                 continue;
             }
@@ -150,8 +182,10 @@ public class PieceController : MonoBehaviour
                 for(int k = 0; k < piece.Matrix[j].Count; k ++)
                 {
                     Vector2Int AuxPosition = Direction + new Vector2Int(k, -j);
-                    if(AuxPosition.x >= OtherPiece.Matrix[0].Count ||
-                       Mathf.Abs(AuxPosition.y) >= OtherPiece.Matrix.Count)
+                    if (AuxPosition.x < 0 ||
+                        AuxPosition.y > 0 ||
+                        AuxPosition.x >= OtherPiece.Matrix[0].Count ||
+                        Mathf.Abs(AuxPosition.y) >= OtherPiece.Matrix.Count)
                     {
                         continue;
                     }

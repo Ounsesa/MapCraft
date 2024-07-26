@@ -8,6 +8,8 @@ public class TileCraftingOption : MonoBehaviour
 {
     [SerializeField]
     protected PieceType ItemType;
+    [SerializeField]
+    protected PieceType CraftingItemType;
 
     [SerializeField]
     protected int Id = 0;
@@ -17,6 +19,8 @@ public class TileCraftingOption : MonoBehaviour
 
     [SerializeField]
     protected GameObject AssetAmountText;
+    [SerializeField]
+    protected PieceController PieceController;
 
     [SerializeField]
     protected Button CraftButton;
@@ -56,7 +60,22 @@ public class TileCraftingOption : MonoBehaviour
             int auxRemoveAmount = AmountToCraft;
             CurrentAmount -= auxRemoveAmount;
             AmountToCraft = Mathf.FloorToInt(AmountToCraft * 1.2f);
-            if (ItemType == PieceType.Resource)
+            if (CraftingItemType == PieceType.MaterialBuff)
+            {
+                Inventory.RemoveMaterial(Id, auxRemoveAmount);
+                PieceController.CreateTimeBuffPiece(PieceType.MaterialBuff);
+            }
+            else if (CraftingItemType == PieceType.ResourceBuff)
+            {
+                Inventory.RemoveResource(Id, auxRemoveAmount);
+                PieceController.CreateTimeBuffPiece(PieceType.ResourceBuff);
+            }
+            else if (CraftingItemType == PieceType.BiomeBuff)
+            {
+                Inventory.RemoveResource(Id, auxRemoveAmount);
+                PieceController.CreateBiomeBuffPiece();
+            }
+            else if (ItemType == PieceType.Resource)
             {
                 Inventory.RemoveResource(Id, auxRemoveAmount);
                 Inventory.AddAssetTile(PieceType.Material, 1);
