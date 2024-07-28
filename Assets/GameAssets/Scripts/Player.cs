@@ -23,7 +23,6 @@ public class Player : MonoBehaviour
     public PieceController PieceController;
     public MapCraftingButton MapCraftingButton;
 
-    public List<Piece> PlaceholderPieces;
 
     private void Start()
     {
@@ -39,7 +38,7 @@ public class Player : MonoBehaviour
 
         GameObject tile = Instantiate(PieceController.PiecePrefab);
         CurrentPiece = tile.GetComponent<Piece>();
-        CurrentPiece.InitPiece(PieceType.Material, PieceController.PiecePrefab, Matrix);
+        CurrentPiece.InitPiece(PieceType.Material, Matrix);
         CurrentPiece.CreatePiece();
 
     }

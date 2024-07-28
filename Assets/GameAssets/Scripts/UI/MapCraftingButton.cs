@@ -16,7 +16,7 @@ public class MapCraftingButton : CraftingButton
 
             CurrentMapExtension = Instantiate(PieceController.PiecePrefab);
             Piece piece = CurrentMapExtension.GetComponent<Piece>();
-            piece.InitPiece(PieceType.MapExtension, PieceController.PiecePrefab, trimmedGrid);
+            piece.InitPiece(PieceType.MapExtension, trimmedGrid);
             PieceController.SavePiece(piece);
             MapGrid.RemoveTilesUsed();
             MapGrid.RestartCraft();

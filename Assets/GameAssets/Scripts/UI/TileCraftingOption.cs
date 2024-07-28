@@ -25,7 +25,7 @@ public class TileCraftingOption : MonoBehaviour
     [SerializeField]
     protected Button CraftButton;
 
-    public int AmountToCraft = 10;
+    protected CraftCost CraftCost;
 
     protected int CurrentAmount = 0;
     
@@ -36,9 +36,33 @@ public class TileCraftingOption : MonoBehaviour
         CraftButton.onClick.AddListener(CraftTile);
     }
 
-    protected void Start()
+    protected virtual void Start()
     {
+
+        switch (ItemType)
+        {
+            case PieceType.Resource:
+                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.Piece].Clone();
+                break;
+            case PieceType.Material:
+                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.Piece].Clone();
+                break;
+        }
+        switch (CraftingItemType)
+        {
+            case PieceType.MaterialBuff:
+                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.TimeBuff].Clone(); 
+                break;
+            case PieceType.ResourceBuff:
+                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.TimeBuff].Clone(); 
+                break;
+            case PieceType.BiomeBuff:
+                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.AmountBuff].Clone(); 
+                break;
+        }
+
         UpdateItemUI(ItemType, Id, CurrentAmount);
+
     }
 
 
@@ -48,18 +72,18 @@ public class TileCraftingOption : MonoBehaviour
         {
             TextMeshProUGUI textMeshPro = AssetAmountText.GetComponent<TextMeshProUGUI>();
             CurrentAmount = amount;
-            textMeshPro.text = "" + CurrentAmount + "/" + AmountToCraft;
+            textMeshPro.text = "" + CurrentAmount + "/" + CraftCost.CurrentCost;
         }
 
     }
     
     protected virtual void CraftTile()
     {
-        if(CurrentAmount >= AmountToCraft)
+        if(CurrentAmount >= CraftCost.CurrentCost)
         {
-            int auxRemoveAmount = AmountToCraft;
+
+            int auxRemoveAmount = CraftCost.GetCurrentCost();
             CurrentAmount -= auxRemoveAmount;
-            AmountToCraft = Mathf.FloorToInt(AmountToCraft * 1.2f);
             if (CraftingItemType == PieceType.MaterialBuff)
             {
                 if (PieceController.CreateBuffPiece(PieceType.MaterialBuff))

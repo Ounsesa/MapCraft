@@ -41,6 +41,14 @@ public class CraftingGrid : MonoBehaviour
 
         CheckAdjacency(Position, Activated);
 
+        if(!Activated) 
+        {
+            if (NotAdjacentTilesList.Contains(Position))
+            {
+                NotAdjacentTilesList.Remove(Position);
+            }
+        }
+
     }
 
     public void RestartCraft()

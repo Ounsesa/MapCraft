@@ -1,0 +1,5 @@
+CraftType;InitialCost;NextMultiplierCostIncrease;MaxMultiplierCost;MultiplierSubdivisions
+Piece;10;1,2;3;100
+MapExtension;10;1,2;3;100
+AmountBuff;100;1,5;2;20
+TimeBuff;100;1,5;2;20

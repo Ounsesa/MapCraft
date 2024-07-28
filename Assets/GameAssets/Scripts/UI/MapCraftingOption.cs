@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class MapCraftingOption : TileCraftingOption
 {
+    protected override void Start()
+    {
+        CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.MapExtension].Clone();        
+        UpdateItemUI(ItemType, Id, CurrentAmount);
+
+    }
     protected override void CraftTile()
     {
-        if (CurrentAmount >= AmountToCraft)
+        if (CurrentAmount >= CraftCost.CurrentCost)
         {
-            int auxRemoveAmount = AmountToCraft;
+            int auxRemoveAmount = CraftCost.GetCurrentCost();
             CurrentAmount -= auxRemoveAmount;
-            AmountToCraft = Mathf.FloorToInt(AmountToCraft * 1.2f);
             
             Inventory.RemoveMaterial(Id, auxRemoveAmount);
             Inventory.AddMapExtensionTile((BiomeType)Id, 1);

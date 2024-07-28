@@ -22,7 +22,7 @@ public class CraftingButton : MonoBehaviour
 
             GameObject tile = Instantiate(PieceController.PiecePrefab);
             Piece piece = tile.GetComponent<Piece>();
-            piece.InitPiece(grid.CraftType, PieceController.PiecePrefab, trimmedGrid);
+            piece.InitPiece(grid.CraftType, trimmedGrid);
             PieceController.SavePiece(piece);
             grid.RemoveTilesUsed();
             grid.RestartCraft();

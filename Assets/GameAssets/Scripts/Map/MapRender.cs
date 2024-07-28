@@ -11,9 +11,7 @@ public class MapRender : MonoBehaviour
 
     private Camera mainCamera;
 
-    private void Start()
-    {
-    }
+    private List<GameObject> Tiles = new List<GameObject>();
 
     private void Update()
     {
@@ -21,23 +19,23 @@ public class MapRender : MonoBehaviour
         DetectMouseTile();
     }
 
-    public void RenderMap()
+    public void RenderMap(Vector2Int WorldPosition, List<List<int>> Matrix)
     {
-        for (int i = 0; i < Map.Matrix.Count; i++)
+        for (int i = 0; i < Matrix.Count; i++)
         {
-            for (int j = 0; j < Map.Matrix[i].Count; j++)
+            for (int j = 0; j < Matrix[i].Count; j++)
             {
-                if (Map.Matrix[i][j] < 0)
+                if (Matrix[i][j] < 0)
                 {
                     continue;
                 }
                 // Calculate the position for the current tile
-                Vector2 tilePosition = new Vector2(Map.WorldPosition.x + j * TileSize, Map.WorldPosition.y - i * TileSize);
+                Vector2 tilePosition = new Vector2(WorldPosition.x + j * TileSize, WorldPosition.y - i * TileSize);
 
                 // Instantiate the tile prefab at the calculated position
                 GameObject tile = Instantiate(TilePrefab, tilePosition, Quaternion.identity);
-
-                SetBiomeColor(tile, Map.Matrix[i][j]);
+                Tiles.Add(tile);
+                SetBiomeColor(tile, Matrix[i][j]);
                 // Optionally, you can set the tile's parent to keep the hierarchy clean
                 tile.transform.parent = this.transform;
             }

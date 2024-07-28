@@ -27,13 +27,13 @@ public class Map : WorldMatrix
     private void InitializeMap()
     {
         CSVParser.ParseCSVToMatrix(GameManager.Instance.GameDataPath + MapName, out Matrix);
-        MapRender.RenderMap();
+        MapRender.RenderMap(WorldPosition,Matrix);
     }
 
    
     public bool AddPieceToMap(Piece piece)
     {
-        if (PieceController.IsPieceOverlapping(piece))
+        if (PieceController.IsPieceOverlapping(piece, PieceController.PlacedPiecesList))
         {
             Debug.Log("There is a piece in the spot");
             return false;
@@ -109,8 +109,15 @@ public class Map : WorldMatrix
             }
         }
 
+
+        if (PieceController.IsOverlapingOtherMapPieces(mapExtension))
+        {
+            return false;
+        }
+
+
         //Add from the top
-        if(MapExtensionPosition.y > WorldPosition.y)
+        if (MapExtensionPosition.y > WorldPosition.y)
         {
             for(int i = 0; i < mapTile.y; i++)
             {
@@ -172,17 +179,25 @@ public class Map : WorldMatrix
             }
         }
 
-        MapRender.RenderMap();
+
+
+
+        PieceController.IsAdjacentToMapExtension(mapExtension);
+
+        MapRender.RenderMap(mapExtension.WorldPosition, mapExtension.Matrix);
 
         return true;
     }
 
 
+
     bool CheckAdjacency(Piece mapExtension)
     {
-        //TODO: no funciona colocar una pieza justo en la esquina
-        //hay que hacer que si el valor de un extremo donde se comprueba es -1, mover la comprobación a la siguiente tile
-
+        return CheckAdjacency(mapExtension, WorldPosition, Matrix);        
+    }
+    
+    public bool CheckAdjacency(Piece mapExtension, Vector2Int OtherPosition, List<List<int>> OtherMatrix)
+    {        
 
         // Add the piece to the map matrix
         List<List<int>> MapExtensionMatrix = mapExtension.Matrix;
@@ -190,8 +205,8 @@ public class Map : WorldMatrix
         int INVALID_TILE = GameManager.Instance.INVALID_TILE;
 
         // Get the dimensions of both matrices
-        int mainMatrixWidth = Matrix[0].Count;
-        int mainMatrixHeight = Matrix.Count;
+        int mainMatrixWidth = OtherMatrix[0].Count;
+        int mainMatrixHeight = OtherMatrix.Count;
         int extensionMatrixWidth = MapExtensionMatrix[0].Count;
         int extensionMatrixHeight = MapExtensionMatrix.Count;
 
@@ -205,10 +220,10 @@ public class Map : WorldMatrix
                     Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, -(extensionMatrixHeight - 1 - j)); ;
                     Vector2Int tileToCheck = tilePosition + new Vector2Int(0, -1);
 
-                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                    if (tileToCheck.x >= OtherPosition.x && tileToCheck.x <= OtherPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= OtherPosition.y && tileToCheck.y > OtherPosition.y - mainMatrixHeight)
                     {
-                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        if (OtherMatrix[OtherPosition.y - tileToCheck.y][tileToCheck.x - OtherPosition.x] != INVALID_TILE)
                         {
                             return true;
                         }
@@ -229,10 +244,10 @@ public class Map : WorldMatrix
                     Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(i, -j);
                     Vector2Int tileToCheck = tilePosition + new Vector2Int(0, 1);
 
-                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                    if (tileToCheck.x >= OtherPosition.x && tileToCheck.x <= OtherPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= OtherPosition.y && tileToCheck.y > OtherPosition.y - mainMatrixHeight)
                     {
-                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        if (OtherMatrix[OtherPosition.y - tileToCheck.y][tileToCheck.x - OtherPosition.x] != INVALID_TILE)
                         {
                             return true;
                         }
@@ -253,10 +268,10 @@ public class Map : WorldMatrix
                     Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(extensionMatrixWidth - 1 - j, -i);
                     Vector2Int tileToCheck = tilePosition + new Vector2Int(1, 0);
 
-                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                    if (tileToCheck.x >= OtherPosition.x && tileToCheck.x <= OtherPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= OtherPosition.y && tileToCheck.y > OtherPosition.y - mainMatrixHeight)
                     {
-                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        if (OtherMatrix[OtherPosition.y - tileToCheck.y][tileToCheck.x - OtherPosition.x] != INVALID_TILE)
                         {
                             return true;
                         }
@@ -276,10 +291,10 @@ public class Map : WorldMatrix
                     Vector2Int tilePosition = MapExtensionPosition + new Vector2Int(j, -i);
                     Vector2Int tileToCheck = tilePosition + new Vector2Int(-1, 0);
 
-                    if (tileToCheck.x >= WorldPosition.x && tileToCheck.x <= WorldPosition.x + mainMatrixWidth - 1 &&
-                        tileToCheck.y <= WorldPosition.y && tileToCheck.y > WorldPosition.y - mainMatrixHeight)
+                    if (tileToCheck.x >= OtherPosition.x && tileToCheck.x <= OtherPosition.x + mainMatrixWidth - 1 &&
+                        tileToCheck.y <= OtherPosition.y && tileToCheck.y > OtherPosition.y - mainMatrixHeight)
                     {
-                        if (Matrix[WorldPosition.y - tileToCheck.y][tileToCheck.x - WorldPosition.x] != INVALID_TILE)
+                        if (OtherMatrix[OtherPosition.y - tileToCheck.y][tileToCheck.x - OtherPosition.x] != INVALID_TILE)
                         {
                             return true;
                         }
