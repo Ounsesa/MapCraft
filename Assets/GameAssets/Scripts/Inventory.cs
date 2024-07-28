@@ -94,6 +94,10 @@ public class Inventory : MonoBehaviour
         MapExtensionTileList[type] -= amount;
         OnMapExtensionTileAmountChanged?.Invoke(type, MapExtensionTileList[type]);
     }
+    public int GetMapExtensionTile(BiomeType type)
+    {
+        return MapExtensionTileList[type];
+    }
 
     public void PrintInventory()
     {

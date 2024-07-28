@@ -33,6 +33,10 @@ public class BiomeTileSelection : MonoBehaviour
     private void Start()
     {
         UpdateItemUI(BiomeType, CurrentAmount);
+        if(BiomeType == BiomeType.Forest)
+        {
+            GetComponent<Image>().color = Color.yellow;
+        }
     }
 
     private void UpdateItemUI(BiomeType type, int amount)

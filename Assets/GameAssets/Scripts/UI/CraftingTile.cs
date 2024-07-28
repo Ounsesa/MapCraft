@@ -7,31 +7,63 @@ public class CraftingTile : MonoBehaviour
 {
     public Vector2Int GridPosition = new Vector2Int();
     public CraftingGrid CraftingGrid;
+    public MapCraftingGrid MapCraftingGrid;
 
-    private bool Selected = false;
+    protected bool Selected = false;
 
-    private Image Image;
-    private Button Button;
+    protected Image Image;
+    protected Button Button;
 
-    private void Awake()
+    protected void Awake()
     {
         Image = GetComponent<Image>();
         Button = GetComponent<Button>();
         Button.onClick.AddListener(SelectTile);
     }
 
-    private void SelectTile()
+    protected virtual void SelectTile()
     {
         Selected = !Selected;
         if(Selected)
         {
-            Image.color = Color.yellow;
+            if(MapCraftingGrid != null)
+            {
+                switch (MapCraftingGrid.MapCraftType)
+                {
+                    case BiomeType.Forest:
+                        Image.color = Color.green;
+                        break;
+                    case BiomeType.Desert:
+                        Image.color = Color.yellow;
+                        break;
+                    case BiomeType.Mountain:
+                        Image.color = Color.gray;
+                        break;
+                    case BiomeType.Plains:
+                        Image.color = Color.blue;
+                        break;
+                }
+                MapCraftingGrid.ActivateTile(GridPosition, Selected);
+            }
+            else
+            {
+                Image.color = Color.yellow;
+                CraftingGrid.ActivateTile(GridPosition, Selected);
+            }
         }
         else 
         {
-            Image.color = Color.gray;
+            if (MapCraftingGrid != null)
+            {
+                Image.color = Color.black;
+                MapCraftingGrid.ActivateTile(GridPosition, Selected);
+            } 
+            else
+            {
+                Image.color = Color.gray;
+                CraftingGrid.ActivateTile(GridPosition, Selected);
+            }
         }
-        CraftingGrid.ActivateTile(GridPosition, Selected);
     }
 
     public void Deselect()
