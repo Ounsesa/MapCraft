@@ -2447,7 +2447,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2103586238600320189, guid: ab0fcfb24d2ffa44bbe0b08e55316bfc, type: 3}
       propertyPath: ItemType
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2103586238600320189, guid: ab0fcfb24d2ffa44bbe0b08e55316bfc, type: 3}
       propertyPath: Inventory
@@ -5815,11 +5815,11 @@ MonoBehaviour:
   PiecePrefab: {fileID: 6919223933649081333, guid: 9c82b302cccfd7441acbd2aa52a2f745, type: 3}
   BuffsController: {fileID: 1071570167}
   OtherBiomesPiecesList: []
-  NumberOfOtherBiomes: 5
+  NumberOfOtherBiomes: 100
   DistanceFromMap: 5
   DistanceBetweenLayers: 5
   RandomOffset: 1
-  RandomValueForNotPlacePiece: 3
+  RandomValueForNotPlacePiece: 2
 --- !u!4 &962494087
 Transform:
   m_ObjectHideFlags: 0
