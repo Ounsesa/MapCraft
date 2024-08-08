@@ -46,28 +46,24 @@ public class MapCraftingGrid : CraftingGrid
         {
             return false;
         }
-
-        for(int i = 0; i < TilesUsed.Count; i++) 
-        {
-            if(Inventory.GetMapExtensionTile((BiomeType)i) < TilesUsed[(BiomeType)i])
-            { 
-                return false; 
-            }
-            foreach (KeyValuePair<BiomeType, int> pair in TilesUsed)
-            {
-                if(Inventory.GetMapExtensionTile(pair.Key) < pair.Value)
-                {
-                    return false;
-                }
-            }
-        }
         
+        foreach (KeyValuePair<BiomeType, int> pair in TilesUsed)
+        {
+            if(Inventory.GetMapExtensionTile(pair.Key) < pair.Value)
+            {
+                return false;
+            }
+        }        
 
         return true;
     }
 
     public override void RemoveTilesUsed()
     {
-        Inventory.RemoveMapExtensionTile(MapCraftType, SelectedTiles);
+        for (int i = 0; i < TilesUsed.Count; i++)
+        {
+            Inventory.RemoveMapExtensionTile((BiomeType)i, TilesUsed[(BiomeType)i]);
+            TilesUsed[(BiomeType)i] = 0;
+        }
     }
 }

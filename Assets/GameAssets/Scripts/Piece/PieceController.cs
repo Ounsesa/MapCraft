@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -245,7 +246,10 @@ public class PieceController : MonoBehaviour
 
                 int RandomBiome = Random.Range(0, ResourcesManager.GetEnumLength<BiomeType>());
 
-                List<List<int>> Matrix = MapExtensionsFormsList[Random.Range(0, MapExtensionsFormsList.Count)];
+
+                List<List<int>> Matrix = MapExtensionsFormsList[Random.Range(0, MapExtensionsFormsList.Count)]
+                                        .Select(innerList => innerList.ToList()) // Creates a shallow copy of each inner list
+                                        .ToList(); // Creates a shallow copy of the outer list
 
                 for (int i = 0; i < Matrix.Count; i++)
                 {
@@ -267,6 +271,12 @@ public class PieceController : MonoBehaviour
                 ExtensionsPlaced++;
 
                 OtherBiomesPiecesList.Add(tile);
+
+                if(ExtensionsPlaced >= NumberOfOtherBiomes)
+                {
+                    break;
+                }
+
 
             }
 
@@ -337,14 +347,15 @@ public class PieceController : MonoBehaviour
     }
 
     public void IsAdjacentToMapExtension(Piece piece)
-    {        
-        for(int i = 0; i < OtherBiomesPiecesList.Count; i++) 
-        { 
-            if(Map.CheckAdjacency(piece, OtherBiomesPiecesList[i].GetComponent<Piece>().WorldPosition, OtherBiomesPiecesList[i].GetComponent<Piece>().Matrix))
+    {
+        for (int i = OtherBiomesPiecesList.Count - 1; i >= 0; i--)
+        {
+            GameObject AuxGameObject = OtherBiomesPiecesList[i];
+            Piece OtherPiece = AuxGameObject.GetComponent<Piece>();
+            if (Map.CheckAdjacency(piece, OtherPiece.WorldPosition, OtherPiece.Matrix))
             {
-                GameObject AuxGameObject = OtherBiomesPiecesList[i];
                 OtherBiomesPiecesList.RemoveAt(i);
-                if (Map.ExtendMap(AuxGameObject.GetComponent<Piece>()))
+                if (Map.ExtendMap(OtherPiece))
                 {
                     Destroy(AuxGameObject);
                 }

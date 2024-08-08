@@ -174,8 +174,10 @@ public class Map : WorldMatrix
             
             for (int j = 0; j < MapExtensionMatrix[i].Count; j++)
             {
-
-                Matrix[Mathf.Abs(NewMapTile.y - i)][NewMapTile.x + j] = MapExtensionMatrix[i][j];                
+                if(Matrix[Mathf.Abs(NewMapTile.y - i)][NewMapTile.x + j] == GameManager.Instance.INVALID_TILE)
+                {
+                    Matrix[Mathf.Abs(NewMapTile.y - i)][NewMapTile.x + j] = MapExtensionMatrix[i][j];                
+                }
             }
         }
 

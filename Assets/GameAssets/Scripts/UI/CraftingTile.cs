@@ -69,6 +69,13 @@ public class CraftingTile : MonoBehaviour
     public void Deselect()
     {
         Selected = false;
-        Image.color = Color.gray;
+        if (MapCraftingGrid != null)
+        {
+            Image.color = Color.black;
+        }
+        else
+        {
+            Image.color = Color.gray;
+        }
     }
 }
