@@ -13,12 +13,16 @@ public class Inventory : MonoBehaviour
 
     Dictionary<BiomeType, int> MapExtensionTileList = new Dictionary<BiomeType, int>();
 
+    int FinalExtensionTile = 0;
+
     //Piece type [Resource/Material], int [id], int [amount]
     public event System.Action<PieceType, int, int> OnItemAmountChanged;
     //Piece type [Resource/Material], int [id]
     public event System.Action<PieceType, int> OnAssetTileAmountChanged;
     //Piece type [Resource/Material], int [id]
     public event System.Action<BiomeType, int> OnMapExtensionTileAmountChanged;
+    //Final extension Tile
+    public event System.Action<int> OnFinalExtensionTileAmountChanged;
 
 
     // Start is called before the first frame update
@@ -110,5 +114,17 @@ public class Inventory : MonoBehaviour
         {
             Debug.Log($"{material.Key}: {material.Value}");
         }
+    }
+
+
+    public void AddFinalExtensionTile()
+    {
+        FinalExtensionTile += 1;
+        OnFinalExtensionTileAmountChanged?.Invoke(FinalExtensionTile);
+    }
+    public void RemoveFinalExtensionTile()
+    {
+        FinalExtensionTile = 0;
+        OnFinalExtensionTileAmountChanged?.Invoke(FinalExtensionTile);
     }
 }

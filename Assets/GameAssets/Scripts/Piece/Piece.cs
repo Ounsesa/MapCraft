@@ -59,6 +59,9 @@ public class Piece : WorldMatrix
                             case 3:
                                 tile.GetComponent<SpriteRenderer>().color = Color.blue;
                                 break;
+                            case 4:
+                                tile.GetComponent<SpriteRenderer>().color = new Color(1f, 0.5f, 0f); ;
+                                break;
                         }
                     }
                     else if(Type == PieceType.BiomeBuff)

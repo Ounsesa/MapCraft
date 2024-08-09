@@ -9,6 +9,7 @@ public class CraftingButton : MonoBehaviour
     public CraftingGrid grid;
     public PieceController PieceController;
     public GameObject CraftingUI;
+    public Player player;
 
     private void Awake()
     {
@@ -26,7 +27,9 @@ public class CraftingButton : MonoBehaviour
             PieceController.SavePiece(piece);
             grid.RemoveTilesUsed();
             grid.RestartCraft();
-            CraftingUI.SetActive(!CraftingUI.activeSelf);
+            CraftingUI.GetComponent<Canvas>().enabled = false;
+
+            player.CanPlacePiece = true;
             Debug.Log("Can craft");
         }
         else 

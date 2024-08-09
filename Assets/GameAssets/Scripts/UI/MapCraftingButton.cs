@@ -21,7 +21,9 @@ public class MapCraftingButton : CraftingButton
             MapGrid.RemoveTilesUsed();
             MapGrid.RestartCraft();
 
-            MapCraftingUI.SetActive(!MapCraftingUI.activeSelf);
+            CraftingUI.GetComponent<Canvas>().enabled = false;
+
+            player.CanPlacePiece = true;
             Debug.Log("Can craft");
         }
         else

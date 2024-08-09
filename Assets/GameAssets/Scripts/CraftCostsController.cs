@@ -5,6 +5,10 @@ using UnityEngine;
 public class CraftCostsController : MonoBehaviour
 {
     public static CraftCostsController Instance;
+
+    public Dictionary<CraftType, CraftCost> CraftingInitialCosts;
+
+    public string CraftCostsPath = "CraftingCosts.csv";
     void Awake()
     {
         if (Instance != null)
@@ -13,17 +17,13 @@ public class CraftCostsController : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
 
-        Instance = this;
-
-    }
-
-    private void Start()
-    {
+        Instance = this; 
+        
+        
         CraftingInitialCosts = CSVParser.ParseCSVToDictionary(GameManager.Instance.GameDataPath + CraftCostsPath);
+
+
     }
 
-    public Dictionary<CraftType, CraftCost> CraftingInitialCosts;
-
-    public string CraftCostsPath = "CraftingCosts.csv";
 
 }

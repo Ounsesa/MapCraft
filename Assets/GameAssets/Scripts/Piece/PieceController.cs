@@ -21,6 +21,8 @@ public class PieceController : MonoBehaviour
     public int RandomOffset = 5;
     public int RandomValueForNotPlacePiece = 3;
 
+    public int RandomValueForFinalMapExtension = 1;
+
     private List<List<List<int>>> MapExtensionsFormsList;
 
 
@@ -110,6 +112,12 @@ public class PieceController : MonoBehaviour
                                     MaterialType material = (MaterialType)(value);
                                     Inventory.AddMaterial((value), 1);
                                     Debug.Log($"Material: {material}");
+
+                                    if(Random.Range(0, 100) <= RandomValueForFinalMapExtension)
+                                    {
+                                        Inventory.AddFinalExtensionTile();
+                                        Debug.Log("Final Extension Looted");
+                                    }
                                 }
                             }
                         }

@@ -17,13 +17,13 @@ public class ShowCraftingUI : MonoBehaviour
     // Update is called once per frame
     public void ToggleUIVisibility()
     {
-        CraftingUI.SetActive(!CraftingUI.activeSelf);
+        CraftingUI.GetComponent<Canvas>().enabled = !CraftingUI.GetComponent<Canvas>().enabled;
 
-        player.CanPlacePiece = !CraftingUI.activeSelf;
+        player.CanPlacePiece = !CraftingUI.GetComponent<Canvas>().enabled;
 
         for (int i = 0;  i < OtherCraftingUI.Count; i++) 
         {
-            OtherCraftingUI[i].SetActive(false);
+            OtherCraftingUI[i].GetComponent<Canvas>().enabled = false;
         }
     }
 }
