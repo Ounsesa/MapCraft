@@ -37,6 +37,10 @@ public class MapCraftingGrid : CraftingGrid
 
     public override bool ValidCraft()
     {
+        if (Player.CurrentPiece != null)
+        {
+            return false;
+        }
         if (NotAdjacentTilesList.Count > 0)
         {
             Debug.Log("Not adjacent");

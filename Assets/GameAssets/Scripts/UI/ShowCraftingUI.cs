@@ -7,6 +7,7 @@ public class ShowCraftingUI : MonoBehaviour
 {
     public GameObject CraftingUI;
     public List<GameObject> OtherCraftingUI;
+    public Player player;
     // Start is called before the first frame update
     void Awake()
     {
@@ -18,7 +19,9 @@ public class ShowCraftingUI : MonoBehaviour
     {
         CraftingUI.SetActive(!CraftingUI.activeSelf);
 
-        for(int i = 0;  i < OtherCraftingUI.Count; i++) 
+        player.CanPlacePiece = !CraftingUI.activeSelf;
+
+        for (int i = 0;  i < OtherCraftingUI.Count; i++) 
         {
             OtherCraftingUI[i].SetActive(false);
         }

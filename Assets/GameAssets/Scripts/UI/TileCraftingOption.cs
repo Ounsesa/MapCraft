@@ -21,6 +21,8 @@ public class TileCraftingOption : MonoBehaviour
     protected GameObject AssetAmountText;
     [SerializeField]
     protected PieceController PieceController;
+    [SerializeField]
+    protected GameObject CraftingUI;
 
     [SerializeField]
     protected Button CraftButton;
@@ -81,45 +83,49 @@ public class TileCraftingOption : MonoBehaviour
     {
         if(CurrentAmount >= CraftCost.CurrentCost)
         {
-
-            int auxRemoveAmount = CraftCost.GetCurrentCost();
-            CurrentAmount -= auxRemoveAmount;
-            if (CraftingItemType == PieceType.MaterialBuff)
+            if (CraftingItemType == PieceType.Material)
             {
-                if (PieceController.CreateBuffPiece(PieceType.MaterialBuff))
+                int auxRemoveAmount = CraftCost.GetCurrentCost();
+                CurrentAmount -= auxRemoveAmount;
+                if (ItemType == PieceType.Resource)
+                {
+                    Inventory.RemoveResource(Id, auxRemoveAmount);
+                    Inventory.AddAssetTile(PieceType.Material, 1);
+                }
+                else if (ItemType == PieceType.Material)
                 {
                     Inventory.RemoveMaterial(Id, auxRemoveAmount);
+                    Inventory.AddAssetTile(PieceType.Resource, 1);
                 }
-            }
-            else if (CraftingItemType == PieceType.ResourceBuff)
-            {
-                if (PieceController.CreateBuffPiece(PieceType.ResourceBuff))
+                else if (ItemType == PieceType.MapExtension)
                 {
-                    Inventory.RemoveResource(Id, auxRemoveAmount);
+                    Inventory.RemoveMaterial(Id, auxRemoveAmount);
+                    Inventory.AddMapExtensionTile((BiomeType)Id, auxRemoveAmount);
                 }
             }
-            else if (CraftingItemType == PieceType.BiomeBuff)
+            else
             {
-                if (PieceController.CreateBuffPiece(PieceType.BiomeBuff))
+                if (PieceController.CreateBuffPiece(CraftingItemType))
                 {
-                    Inventory.RemoveResource(Id, auxRemoveAmount);
+                    int auxRemoveAmount = CraftCost.GetCurrentCost();
+                    CurrentAmount -= auxRemoveAmount;
+                    if (CraftingItemType == PieceType.MaterialBuff)
+                    {
+                        Inventory.RemoveMaterial(Id, auxRemoveAmount);
+                    }
+                    else
+                    {
+                        Inventory.RemoveResource(Id, auxRemoveAmount);
+                    }
+
+                    if(CraftingUI)
+                    {
+                        CraftingUI.SetActive(!CraftingUI.activeSelf);
+                    }
                 }
+
             }
-            else if (ItemType == PieceType.Resource)
-            {
-                Inventory.RemoveResource(Id, auxRemoveAmount);
-                Inventory.AddAssetTile(PieceType.Material, 1);
-            }
-            else if(ItemType == PieceType.Material)
-            {
-                Inventory.RemoveMaterial(Id, auxRemoveAmount);
-                Inventory.AddAssetTile(PieceType.Resource, 1);
-            }
-            else if(ItemType == PieceType.MapExtension)
-            {
-                Inventory.RemoveMaterial(Id, auxRemoveAmount);
-                Inventory.AddMapExtensionTile((BiomeType)Id, auxRemoveAmount);
-            }
+            
             Debug.Log("Craft");
         }
         else 

@@ -22,10 +22,12 @@ public class Player : MonoBehaviour
     public float CameraZoomSpeed = 5f;
     public PieceController PieceController;
     public MapCraftingButton MapCraftingButton;
+    public bool CanPlacePiece;
 
 
     private void Start()
     {
+        CanPlacePiece = true;
         PlayerInput playerInput = GetComponent<PlayerInput>();
         InputAction = GameManager.Instance.InputManager.RegisterInputActionsPlayer(playerInput, this);        
 
@@ -88,7 +90,7 @@ public class Player : MonoBehaviour
 
     private void PerformAction()
     {
-        if (CurrentPiece != null)
+        if (CurrentPiece != null && CanPlacePiece)
         { 
             //Debug.Log($"PiecePosition {CurrentPiece.Position.x}, {CurrentPiece.Position.y}");
             if (CurrentPiece.Type != PieceType.MapExtension && Map.AddPieceToMap(CurrentPiece))
