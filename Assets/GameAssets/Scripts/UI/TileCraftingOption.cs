@@ -23,6 +23,8 @@ public class TileCraftingOption : MonoBehaviour
     protected PieceController PieceController;
     [SerializeField]
     protected GameObject CraftingUI;
+    [SerializeField]
+    protected Player Player;
 
     [SerializeField]
     protected Button CraftButton;
@@ -105,6 +107,11 @@ public class TileCraftingOption : MonoBehaviour
             }
             else
             {
+                if(GameManager.Instance.TutorialOpen)
+                { 
+                    return;
+                }
+
                 if (PieceController.CreateBuffPiece(CraftingItemType))
                 {
                     int auxRemoveAmount = CraftCost.GetCurrentCost();
@@ -120,7 +127,8 @@ public class TileCraftingOption : MonoBehaviour
 
                     if(CraftingUI)
                     {
-                        CraftingUI.SetActive(!CraftingUI.activeSelf);
+                        CraftingUI.GetComponent<Canvas>().enabled = false;
+                        PieceController.Player.CanPlacePiece = true;
                     }
                 }
 

@@ -12,6 +12,8 @@ public class GameManager : Manager
     [Header("Inputs")]
     public ActionsName ActionsName;
 
+    public bool TutorialOpen = false;
+
 
     public int INVALID_TILE = -1;
 

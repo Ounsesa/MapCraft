@@ -26,10 +26,6 @@ public class CraftCost
 
     private float MultiplierIncrease;
 
-    public void Start()
-    {
-        MultiplierIncrease = (MaxMultiplierCost - 1) / MultiplierSubdivisions;
-    }
 
     public int GetCurrentCost()
     {
@@ -45,7 +41,8 @@ public class CraftCost
             CurrentCost = this.CurrentCost,
             NextMultiplierCost = this.NextMultiplierCost,
             MaxMultiplierCost = this.MaxMultiplierCost,
-            MultiplierSubdivisions = this.MultiplierSubdivisions
+            MultiplierSubdivisions = this.MultiplierSubdivisions,
+            MultiplierIncrease = (MaxMultiplierCost - 1) / MultiplierSubdivisions
         };
     }
 }

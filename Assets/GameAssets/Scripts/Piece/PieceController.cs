@@ -113,7 +113,9 @@ public class PieceController : MonoBehaviour
                                     Inventory.AddMaterial((value), 1);
                                     Debug.Log($"Material: {material}");
 
-                                    if(Random.Range(0, 100) <= RandomValueForFinalMapExtension)
+                                    int RandomValue = Random.Range(0, 1000);
+                                    Debug.Log(RandomValue);
+                                    if (RandomValue <= RandomValueForFinalMapExtension)
                                     {
                                         Inventory.AddFinalExtensionTile();
                                         Debug.Log("Final Extension Looted");

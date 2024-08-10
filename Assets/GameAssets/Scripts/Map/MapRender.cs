@@ -58,6 +58,9 @@ public class MapRender : MonoBehaviour
             case 3:
                 Tile.GetComponent<SpriteRenderer>().color = Color.cyan;
                 break;
+            case 4:
+                Tile.GetComponent<SpriteRenderer>().color = new Color(1f, 0.5f, 0f); ;
+                break;
         }
     }
 

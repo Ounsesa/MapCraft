@@ -24,13 +24,10 @@ public class Player : MonoBehaviour
     public MapCraftingButton MapCraftingButton;
     public bool CanPlacePiece;
 
+    private bool FirstPiecePlaced = false;
 
-    private void Start()
+    public void StartPiece()
     {
-        CanPlacePiece = true;
-        PlayerInput playerInput = GetComponent<PlayerInput>();
-        InputAction = GameManager.Instance.InputManager.RegisterInputActionsPlayer(playerInput, this);        
-
         // Initialize CurrentPiece.Matrix using List<List<int>>
         List<List<int>> Matrix = new List<List<int>>()
         {
@@ -43,6 +40,14 @@ public class Player : MonoBehaviour
         CurrentPiece.InitPiece(PieceType.Material, Matrix);
         CurrentPiece.CreatePiece();
 
+        CanPlacePiece = true;
+    }
+
+    private void Start()
+    {
+        CanPlacePiece = false;
+        PlayerInput playerInput = GetComponent<PlayerInput>();
+        InputAction = GameManager.Instance.InputManager.RegisterInputActionsPlayer(playerInput, this);        
     }
 
     // Update is called once per frame
@@ -92,17 +97,22 @@ public class Player : MonoBehaviour
     {
         if (CurrentPiece != null && CanPlacePiece)
         { 
-            //Debug.Log($"PiecePosition {CurrentPiece.Position.x}, {CurrentPiece.Position.y}");
             if (CurrentPiece.Type != PieceType.MapExtension && Map.AddPieceToMap(CurrentPiece))
             {
                 Debug.Log("Piece placed");
                 PieceController.AddPiece(CurrentPiece);
                 CurrentPiece = null;
+
+                if(!FirstPiecePlaced)
+                {
+                    FirstPiecePlaced = true;
+                    Tutorial.Instance.StartTutorialFirstPiecePlaced();
+                }
             }
             else if (CurrentPiece.Type == PieceType.MapExtension && Map.ExtendMap(CurrentPiece))
             {
                 Debug.Log("Adjacent map piece");
-                Destroy(MapCraftingButton.CurrentMapExtension);
+                Destroy(CurrentPiece.gameObject);
                 CurrentPiece = null;
             }
         }

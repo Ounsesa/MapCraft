@@ -8,6 +8,8 @@ public class ShowCraftingUI : MonoBehaviour
     public GameObject CraftingUI;
     public List<GameObject> OtherCraftingUI;
     public Player player;
+
+    private bool TutorialShown = false;
     // Start is called before the first frame update
     void Awake()
     {
@@ -17,13 +19,40 @@ public class ShowCraftingUI : MonoBehaviour
     // Update is called once per frame
     public void ToggleUIVisibility()
     {
-        CraftingUI.GetComponent<Canvas>().enabled = !CraftingUI.GetComponent<Canvas>().enabled;
-
-        player.CanPlacePiece = !CraftingUI.GetComponent<Canvas>().enabled;
-
-        for (int i = 0;  i < OtherCraftingUI.Count; i++) 
+        if (!GameManager.Instance.TutorialOpen)
         {
-            OtherCraftingUI[i].GetComponent<Canvas>().enabled = false;
+            CraftingUI.GetComponent<Canvas>().enabled = !CraftingUI.GetComponent<Canvas>().enabled;
+
+            player.CanPlacePiece = !CraftingUI.GetComponent<Canvas>().enabled;
+
+            for (int i = 0; i < OtherCraftingUI.Count; i++)
+            {
+                OtherCraftingUI[i].GetComponent<Canvas>().enabled = false;
+            }
+
+
+            if(!TutorialShown)
+            {
+                TutorialShown = true;
+
+                if (CraftingUI.gameObject.name == "CraftingCanvas")
+                {
+                    Tutorial.Instance.ShowCraftTutorial();
+                }
+                else if (CraftingUI.gameObject.name == "MapCraftingCanvas")
+                {
+                    Tutorial.Instance.ShowMapExtensionTutorial();
+                }
+                else if (CraftingUI.gameObject.name == "TimeBuffCanvas")
+                {
+                    Tutorial.Instance.ShowTimeBuffTutorial();
+                }
+                else if (CraftingUI.gameObject.name == "BiomeBuffCanvas")
+                {
+                    Tutorial.Instance.ShowBiomeBuffTutorial();
+                }
+            }
         }
+       
     }
 }

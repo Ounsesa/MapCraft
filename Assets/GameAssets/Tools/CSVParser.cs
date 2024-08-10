@@ -93,4 +93,22 @@ public class CSVParser
         return craftingCosts;
     }
 
+
+    public static List<string> ParseCSVToTutorial(string PathFile)
+    {
+        List<string> result = new List<string>();
+
+        using (StreamReader reader = new StreamReader(PathFile))
+        {
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                // If you want the whole line as a string
+                result.Add(line);
+            }
+        }
+
+        return result;
+    }
+
 }

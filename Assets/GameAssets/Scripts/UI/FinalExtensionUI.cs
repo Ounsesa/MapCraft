@@ -21,6 +21,8 @@ public class FinalExtensionUI : MonoBehaviour
     private int MaxTilesNeeded = 9;
     private int CurrentTileAmount = 0;
 
+    private bool TutorialShown = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -53,6 +55,10 @@ public class FinalExtensionUI : MonoBehaviour
 
         piece.InitPiece(PieceType.MapExtension, Matrix);
         PieceController.SavePiece(piece);
+
+        GetComponent<Canvas>().enabled = false;
+
+
     }
 
     void OnUpdateUI(int NewAmount)
@@ -61,5 +67,17 @@ public class FinalExtensionUI : MonoBehaviour
         CurrentTileAmount = NewAmount;
         TextMeshProUGUI textMeshPro = AssetAmountText.GetComponent<TextMeshProUGUI>();
         textMeshPro.text = "" + CurrentTileAmount + "/" + MaxTilesNeeded;
+
+        if (CurrentTileAmount == MaxTilesNeeded)
+        {
+            Inventory.OnFinalExtensionTileAmountChanged -= OnUpdateUI;
+            Tutorial.Instance.ShowFinalCraftTutorial();
+        }
+
+        if(!TutorialShown)
+        {
+            TutorialShown = true;
+            Tutorial.Instance.ShowFinalTutorial();
+        }
     }
 }

@@ -11,6 +11,8 @@ public class CraftingButton : MonoBehaviour
     public GameObject CraftingUI;
     public Player player;
 
+    private bool TutorialShown = false;
+
     private void Awake()
     {
         GetComponent<Button>().onClick.AddListener(TryToCraft);
@@ -31,6 +33,12 @@ public class CraftingButton : MonoBehaviour
 
             player.CanPlacePiece = true;
             Debug.Log("Can craft");
+
+            if(!TutorialShown)
+            {
+                TutorialShown = true;
+                Tutorial.Instance.ShowTrashTutorial();
+            }
         }
         else 
         {

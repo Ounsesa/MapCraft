@@ -16,7 +16,7 @@ public class TrashCan : MonoBehaviour
     // Update is called once per frame
     void DestroyPiece()
     {
-        if (player && player.CurrentPiece && player.PieceController.PlacedPiecesList.Count > 0) 
+        if (player && player.CurrentPiece && player.PieceController.PlacedPiecesList.Count > 0 && player.CurrentPiece.Matrix[0][0] != 4) 
         {
             Destroy(player.CurrentPiece.gameObject);
             player.CurrentPiece = null;

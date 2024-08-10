@@ -19,11 +19,19 @@ public class MapCraftingGrid : CraftingGrid
 
     public override void ActivateTile(Vector2Int Position, bool Activated)
     {
+        if(Activated)
+        {
+            TilesUsed[MapCraftType] += 1;
+        }
+        else
+        {
+            TilesUsed[(BiomeType)Grid[Position.x][Position.y]] -= 1;
+        }
+
         Grid[Position.x][Position.y] = Activated ? (int)MapCraftType : -1;
 
         SelectedTiles += Activated ? 1 : -1;
 
-        TilesUsed[MapCraftType] += Activated ? 1 : -1;
 
         CheckAdjacency(Position, Activated);
         if (!Activated)
