@@ -103,7 +103,6 @@ public class CSVParser
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                // If you want the whole line as a string
                 result.Add(line);
             }
         }

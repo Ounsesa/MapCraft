@@ -61,7 +61,10 @@ public class Map : WorldMatrix
                     return false;
                 }
             }
-        }        
+        }
+
+
+        
 
         return true;
     }
@@ -187,6 +190,15 @@ public class Map : WorldMatrix
         PieceController.IsAdjacentToMapExtension(mapExtension);
 
         MapRender.RenderMap(mapExtension.WorldPosition, mapExtension.Matrix);
+
+        if (mapExtension.Matrix[0][0] == 4)
+        {
+            Tutorial.Instance.ShowFinalFinalTutorial();
+            PieceController.FinalMatrix = mapExtension.Matrix;
+            PieceController.FinalPosition = mapExtension.WorldPosition;
+            GameManager.Instance.GameEnded = true;
+            PieceController.EndGame();
+        }
 
         return true;
     }

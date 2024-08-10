@@ -13,6 +13,7 @@ public class GameManager : Manager
     public ActionsName ActionsName;
 
     public bool TutorialOpen = false;
+    public bool GameEnded = false;
 
 
     public int INVALID_TILE = -1;

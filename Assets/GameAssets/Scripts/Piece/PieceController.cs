@@ -14,6 +14,7 @@ public class PieceController : MonoBehaviour
     public BuffsController BuffsController;
 
 
+
     public List<GameObject> OtherBiomesPiecesList;
     public int NumberOfOtherBiomes = 10;
     public int DistanceFromMap = 10;
@@ -25,12 +26,18 @@ public class PieceController : MonoBehaviour
 
     private List<List<List<int>>> MapExtensionsFormsList;
 
+    Color[] colors;
+    int currentColor = 0;
+    public List<List<int>> FinalMatrix;
+    public Vector2Int FinalPosition;
+
 
     // Start is called before the first frame update
     void Start()
     {
         InitializeOtherBiomes();
-        
+
+
         Invoke("StartResourcesLootingWithDelay", GameManager.Instance.GetLootInterval(PieceType.Resource));
         Invoke("StartMaterialsLootingWithDelay", GameManager.Instance.GetLootInterval(PieceType.Material));
 
@@ -47,6 +54,7 @@ public class PieceController : MonoBehaviour
     public void AddPiece(Piece Piece)
     {
         PlacedPiecesList.Add(Piece);
+
 
         if(Piece.Type == PieceType.MaterialBuff)
         {
@@ -130,6 +138,30 @@ public class PieceController : MonoBehaviour
         }
         
     }
+
+    public void EndGame()
+    {
+
+        StartCoroutine(ChangeColor());
+    }
+
+    IEnumerator ChangeColor()
+    {
+        while (true)
+        {
+
+            for(int i = 0; i < FinalMatrix.Count; i++)
+            {
+                for(int j = 0; j < FinalMatrix[i].Count; j++)
+                {
+                    FinalMatrix[i][j] = (FinalMatrix[i][j] + 1) % 5;
+                }
+            }
+            Map.MapRender.RenderMap(FinalPosition, FinalMatrix);
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
 
     public bool CreateBuffPiece(PieceType piece)
     {
