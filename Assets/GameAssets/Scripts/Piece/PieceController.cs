@@ -26,8 +26,6 @@ public class PieceController : MonoBehaviour
 
     private List<List<List<int>>> MapExtensionsFormsList;
 
-    Color[] colors;
-    int currentColor = 0;
     public List<List<int>> FinalMatrix;
     public Vector2Int FinalPosition;
 
@@ -121,7 +119,7 @@ public class PieceController : MonoBehaviour
                                     Inventory.AddMaterial((value), 1);
                                     Debug.Log($"Material: {material}");
 
-                                    int RandomValue = Random.Range(0, 1000);
+                                    int RandomValue = Random.Range(0, 1500);
                                     Debug.Log(RandomValue);
                                     if (RandomValue <= RandomValueForFinalMapExtension)
                                     {

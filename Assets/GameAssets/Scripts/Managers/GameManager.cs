@@ -21,8 +21,6 @@ public class GameManager : Manager
     public float MaxCameraSize = 20f;
     public float MinCameraSize = 5f;
 
-    public string GameDataPath = "Assets/GameAssets/GameData/";
-
     [SerializeField]
     private float ResourcesLootInterval = 5.0f; // Interval in seconds between looting
     [SerializeField]

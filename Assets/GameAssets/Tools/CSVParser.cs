@@ -3,18 +3,29 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public class CSVParser
 {
-    public static void ParseCSVToMatrix(string PathFile, out List<List<int>> IntMatrix)
+    public static void ParseCSVToMatrix(string resourceName, out List<List<int>> IntMatrix)
     {
         // Initialize the out parameter
         IntMatrix = new List<List<int>>();
 
-        // Read the entire file to determine the number of rows and columns
+        // Load the CSV file from the Resources folder
+        TextAsset csvFile = Resources.Load<TextAsset>(resourceName);
+
+        // Check if the file was successfully loaded
+        if (csvFile == null)
+        {
+            Debug.LogError($"Failed to load resource: {resourceName}");
+            return;
+        }
+
+        // Read the CSV content and split it into lines
         List<string[]> lines = new List<string[]>();
-        using (StreamReader reader = new StreamReader(PathFile))
+        using (StringReader reader = new StringReader(csvFile.text))
         {
             string line;
             while ((line = reader.ReadLine()) != null)
@@ -24,7 +35,7 @@ public class CSVParser
             }
         }
 
-        // Fill MapMatrix with the values from the CSV file
+        // Fill IntMatrix with the values from the CSV file
         foreach (var line in lines)
         {
             List<int> row = new List<int>();
@@ -36,7 +47,7 @@ public class CSVParser
         }
     }
 
-    public static void ParseMatrixToCSV(string PathFile, List<List<int>> MapMatrix)
+    public static void ParseMatrixToCSV(string fileName, List<List<int>> MapMatrix)
     {
         List<string> lines = new List<string>();
 
@@ -47,22 +58,38 @@ public class CSVParser
             lines.Add(line);
         }
 
+        // Define a path to write to (outside of Resources)
+        string filePath = Path.Combine(Application.persistentDataPath, fileName);
+
         // Write lines to the file
-        using (StreamWriter writer = new StreamWriter(PathFile))
+        using (StreamWriter writer = new StreamWriter(filePath))
         {
             foreach (var line in lines)
             {
                 writer.WriteLine(line);
             }
         }
+
+        Debug.Log($"File saved to: {filePath}");
     }
 
-    public static Dictionary<CraftType, CraftCost> ParseCSVToDictionary(string pathFile)
+
+    public static Dictionary<CraftType, CraftCost> ParseCSVToDictionary(string resourceName)
     {
         var craftingCosts = new Dictionary<CraftType, CraftCost>();
 
-        //This line
-        using (StreamReader reader = new StreamReader(pathFile))
+        // Load the CSV file from the Resources folder
+        TextAsset csvFile = Resources.Load<TextAsset>(resourceName);
+
+        // Check if the file was successfully loaded
+        if (csvFile == null)
+        {
+            Debug.LogError($"Failed to load resource: {resourceName}");
+            return craftingCosts;
+        }
+
+        // Use a StringReader to read the CSV content line by line
+        using (StringReader reader = new StringReader(csvFile.text))
         {
             string line;
             bool isHeader = true;
@@ -93,16 +120,27 @@ public class CSVParser
         return craftingCosts;
     }
 
-
-    public static List<string> ParseCSVToTutorial(string PathFile)
+    public static List<string> ParseCSVToTutorial(string resourceName)
     {
         List<string> result = new List<string>();
 
-        using (StreamReader reader = new StreamReader(PathFile))
+        // Load the CSV file from the Resources folder
+        TextAsset csvFile = Resources.Load<TextAsset>(resourceName);
+
+        // Check if the file was successfully loaded
+        if (csvFile == null)
+        {
+            Debug.LogError($"Failed to load resource: {resourceName}");
+            return result;
+        }
+
+        // Use a StringReader to read the CSV content line by line
+        using (StringReader reader = new StringReader(csvFile.text))
         {
             string line;
             while ((line = reader.ReadLine()) != null)
             {
+                Debug.Log(line);
                 result.Add(line);
             }
         }

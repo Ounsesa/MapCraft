@@ -10,7 +10,7 @@ public class Map : WorldMatrix
     public MapRender MapRender;
     public PieceController PieceController;
 
-    public string MapName = "InitialMap.csv";
+    public string MapName = "InitialMap";
 
     public int InitialRows = 3;
     public int InitialColumns = 5;
@@ -26,7 +26,7 @@ public class Map : WorldMatrix
 
     private void InitializeMap()
     {
-        CSVParser.ParseCSVToMatrix(GameManager.Instance.GameDataPath + MapName, out Matrix);
+        CSVParser.ParseCSVToMatrix(MapName, out Matrix);
         MapRender.RenderMap(WorldPosition,Matrix);
     }
 

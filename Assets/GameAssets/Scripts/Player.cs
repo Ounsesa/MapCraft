@@ -19,7 +19,9 @@ public class Player : MonoBehaviour
     public Piece CurrentPiece;
     public Map Map;
     public float CameraSpeed = 3f;
-    public float CameraZoomSpeed = 5f;
+    public float CameraZoomedInSpeed = 3f;
+    public float CameraZoomedOutSpeed = 12f;
+    public float CameraZoomSpeed = 200f;
     public PieceController PieceController;
     public MapCraftingButton MapCraftingButton;
     public bool CanPlacePiece;
@@ -95,7 +97,7 @@ public class Player : MonoBehaviour
 
     private void PerformAction()
     {
-        if (CurrentPiece != null && CanPlacePiece)
+        if (CurrentPiece != null && CanPlacePiece && !GameManager.Instance.GameEnded)
         { 
             if (CurrentPiece.Type != PieceType.MapExtension && Map.AddPieceToMap(CurrentPiece))
             {
@@ -125,6 +127,7 @@ public class Player : MonoBehaviour
         {
             float CurrentSize = Camera.main.GetComponent<Camera>().orthographicSize;
             float NewSize = Mathf.Min(CurrentSize + CameraZoomSpeed * Time.deltaTime, GameManager.Instance.MaxCameraSize);
+            CameraSpeed = Mathf.Min(CameraSpeed + CameraZoomSpeed * Time.deltaTime, CameraZoomedOutSpeed);
             Debug.Log(NewSize);
             Camera.main.GetComponent<Camera>().orthographicSize = NewSize;
         }
@@ -132,6 +135,7 @@ public class Player : MonoBehaviour
         {
             float CurrentSize = Camera.main.GetComponent<Camera>().orthographicSize;
             float NewSize = Mathf.Max(CurrentSize - CameraZoomSpeed * Time.deltaTime, GameManager.Instance.MinCameraSize);
+            CameraSpeed = Mathf.Max(CameraSpeed - CameraZoomSpeed * Time.deltaTime, CameraZoomedInSpeed);
             Camera.main.GetComponent<Camera>().orthographicSize = NewSize;
         }
     }

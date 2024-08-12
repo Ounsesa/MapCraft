@@ -41,7 +41,7 @@ public class Tutorial : MonoBehaviour
     private TextMeshProUGUI textMeshPro;
 
     private bool PlayerGivenPiece = false;
-    private string TutorialFileName = "Tutorial.csv";
+    private string TutorialFileName = "Tutorial";
 
     [SerializeField]
     private Player Player;
@@ -63,7 +63,7 @@ public class Tutorial : MonoBehaviour
 
     private void Start()
     {
-        TutorialStrings = CSVParser.ParseCSVToTutorial(GameManager.Instance.GameDataPath + TutorialFileName);
+        TutorialStrings = CSVParser.ParseCSVToTutorial(TutorialFileName);
 
         StartTutorial(StartingString, EndingString);
     }
@@ -71,6 +71,10 @@ public class Tutorial : MonoBehaviour
 
     void TutorialClicked()
     {
+        if(StartingString == EndTutorialFinal)
+        {
+            return;
+        }
 
         if (StartingString >= EndingString)
         {

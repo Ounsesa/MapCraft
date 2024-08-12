@@ -12,8 +12,7 @@ public class MapPreviewWindow : EditorWindow
     static MapPreviewWindow window;
     private List<List<int>> MapMatrix;
 
-    private string MapFilePath = "Assets/GameAssets/GameData/";
-    private string MapFileName = "InitialMap.csv";
+    private string MapFileName = "InitialMap";
 
     private bool MapSelected = false;
     private int ValueToAdd = 0;
@@ -44,13 +43,12 @@ public class MapPreviewWindow : EditorWindow
     private void MapSelectionGUI()
     {
         EditorGUILayout.BeginVertical();
-        MapFilePath = EditorGUILayout.TextField("Map File Path: ", MapFilePath);
         MapFileName = EditorGUILayout.TextField("Map File Name: ", MapFileName);
         EditorGUILayout.Space();
         if (GUILayout.Button("Open Map"))
         {
             MapSelected = true;
-            CSVParser.ParseCSVToMatrix(MapFilePath + MapFileName, out MapMatrix);
+            CSVParser.ParseCSVToMatrix(MapFileName, out MapMatrix);
         }
 
         EditorGUILayout.EndVertical();
@@ -128,7 +126,7 @@ public class MapPreviewWindow : EditorWindow
     {
         if (GUILayout.Button("Save Map"))
         {
-            CSVParser.ParseMatrixToCSV(MapFilePath + MapFileName, MapMatrix);
+            CSVParser.ParseMatrixToCSV(MapFileName, MapMatrix);
         }
     }
 

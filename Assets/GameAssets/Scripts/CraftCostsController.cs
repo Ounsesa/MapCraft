@@ -8,7 +8,7 @@ public class CraftCostsController : MonoBehaviour
 
     public Dictionary<CraftType, CraftCost> CraftingInitialCosts;
 
-    public string CraftCostsPath = "CraftingCosts.csv";
+    public string CraftCostsPath = "CraftingCosts";
     void Awake()
     {
         if (Instance != null)
@@ -20,7 +20,7 @@ public class CraftCostsController : MonoBehaviour
         Instance = this; 
         
         
-        CraftingInitialCosts = CSVParser.ParseCSVToDictionary(GameManager.Instance.GameDataPath + CraftCostsPath);
+        CraftingInitialCosts = CSVParser.ParseCSVToDictionary(CraftCostsPath);
 
 
     }
