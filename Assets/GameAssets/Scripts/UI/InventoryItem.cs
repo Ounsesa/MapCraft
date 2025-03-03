@@ -5,27 +5,27 @@ using UnityEngine;
 
 public class InventoryItem : MonoBehaviour
 {
+    #region Variables
     [SerializeField]
-    private PieceType ItemType;
-
+    private PieceType m_itemType;
     [SerializeField]
-    private int Id = 0;
-
+    private int m_id = 0;
     [SerializeField]
-    private Inventory Inventory;
-
+    private Inventory m_inventory;
     [SerializeField]
-    private GameObject InventoryQuantityText;
+    private GameObject m_inventoryQuantityText;
+    #endregion
 
     private void Awake()
     {
-        Inventory.OnItemAmountChanged += UpdateItemUI;
+        m_inventory.onItemAmountChanged += UpdateItemUI;
     }
+
     private void UpdateItemUI(PieceType type, int id, int amount)
     {
-        if(Id == id && ItemType == type)
+        if(m_id == id && m_itemType == type)
         {
-            TextMeshProUGUI textMeshPro = InventoryQuantityText.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI textMeshPro = m_inventoryQuantityText.GetComponent<TextMeshProUGUI>();
             textMeshPro.text = "" + amount;
         }        
     }

@@ -21,23 +21,23 @@ public class CraftingButton : MonoBehaviour
     {
         if(grid.ValidCraft())
         {
-            List<List<int>> trimmedGrid = TrimGrid(grid.Grid);
+            List<List<int>> trimmedGrid = TrimGrid(grid.grid);
 
-            GameObject tile = Instantiate(PieceController.PiecePrefab);
+            GameObject tile = Instantiate(PieceController.piecePrefab);
             Piece piece = tile.GetComponent<Piece>();
-            piece.InitPiece(grid.CraftType, trimmedGrid);
+            piece.InitPiece(grid.craftType, trimmedGrid);
             PieceController.SavePiece(piece);
             grid.RemoveTilesUsed();
             grid.RestartCraft();
             CraftingUI.GetComponent<Canvas>().enabled = false;
 
-            player.CanPlacePiece = true;
+            player.canPlacePiece = true;
             Debug.Log("Can craft");
 
             if(!TutorialShown)
             {
                 TutorialShown = true;
-                Tutorial.Instance.ShowTrashTutorial();
+                Tutorial.instance.ShowTrashTutorial();
             }
         }
         else 

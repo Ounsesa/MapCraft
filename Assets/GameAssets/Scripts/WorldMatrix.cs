@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class WorldMatrix : MonoBehaviour
 {
-    public List<List<int>> Matrix;
-    public Vector2Int WorldPosition;
+    #region Variables
+    [HideInInspector]
+    public List<List<int>> matrix;
+    [HideInInspector]
+    public Vector2Int worldPosition;
+    #endregion
 
     public void PrintMatrix()
     {
-        string matrixString = "\n";
-        for (int i = 0; i < Matrix.Count; i++)
+        string MatrixString = "\n";
+        for (int i = 0; i < matrix.Count; i++)
         {
-            for (int j = 0; j < Matrix[i].Count; j++)
+            for (int j = 0; j < matrix[i].Count; j++)
             {
-                matrixString += Matrix[i][j] + " ";
+                MatrixString += matrix[i][j] + " ";
             }
-            matrixString += "\n";
+            MatrixString += "\n";
         }
-        Debug.Log(matrixString);
+        Debug.Log(MatrixString);
     }
 }

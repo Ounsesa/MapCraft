@@ -12,9 +12,9 @@ public class MapCraftingButton : CraftingButton
         if (MapGrid.ValidCraft())
         {
 
-            List<List<int>> trimmedGrid = TrimGrid(MapGrid.Grid);
+            List<List<int>> trimmedGrid = TrimGrid(MapGrid.grid);
 
-            CurrentMapExtension = Instantiate(PieceController.PiecePrefab);
+            CurrentMapExtension = Instantiate(PieceController.piecePrefab);
             Piece piece = CurrentMapExtension.GetComponent<Piece>();
             piece.InitPiece(PieceType.MapExtension, trimmedGrid);
             PieceController.SavePiece(piece);
@@ -23,7 +23,7 @@ public class MapCraftingButton : CraftingButton
 
             CraftingUI.GetComponent<Canvas>().enabled = false;
 
-            player.CanPlacePiece = true;
+            player.canPlacePiece = true;
             Debug.Log("Can craft");
         }
         else

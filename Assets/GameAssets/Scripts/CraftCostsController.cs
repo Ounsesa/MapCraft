@@ -4,25 +4,26 @@ using UnityEngine;
 
 public class CraftCostsController : MonoBehaviour
 {
-    public static CraftCostsController Instance;
+    #region Variables
+    public static CraftCostsController instance;
+    public Dictionary<CraftType, CraftCost> craftingInitialCosts;
 
-    public Dictionary<CraftType, CraftCost> CraftingInitialCosts;
+    [SerializeField]
+    private string m_craftCostsPath = "CraftingCosts";
+    #endregion
 
-    public string CraftCostsPath = "CraftingCosts";
     void Awake()
     {
-        if (Instance != null)
+        if (instance != null)
         {
-            Destroy(Instance.gameObject);
+            Destroy(instance.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
 
-        Instance = this; 
+        instance = this; 
         
         
-        CraftingInitialCosts = CSVParser.ParseCSVToDictionary(CraftCostsPath);
-
-
+        craftingInitialCosts = CSVParser.ParseCSVToDictionary(m_craftCostsPath);
     }
 
 

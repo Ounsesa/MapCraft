@@ -25,7 +25,7 @@ public class TileTypeSelection : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        Inventory.OnAssetTileAmountChanged += UpdateItemUI;
+        Inventory.onAssetTileAmountChanged += UpdateItemUI;
         Button = GetComponent<Button>();
         Button.onClick.AddListener(SelectCraftType);
     }
@@ -48,7 +48,7 @@ public class TileTypeSelection : MonoBehaviour
     private void SelectCraftType()
     {
         CraftingGrid.RestartCraft();
-        CraftingGrid.CraftType = ItemType;
+        CraftingGrid.craftType = ItemType;
         GetComponent<Image>().color = Color.yellow;
         OtherType.GetComponent<Image>().color = Color.gray;
 

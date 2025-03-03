@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class BuffsController : MonoBehaviour
 {    
-    public Dictionary<BiomeType, float> BiomeMultiplier;
+    public Dictionary<BiomeType, float> biomeMultiplier;
 
     private void Awake()
     {
-        BiomeMultiplier = new Dictionary<BiomeType, float>
+        biomeMultiplier = new Dictionary<BiomeType, float>
         {
             { BiomeType.Forest, 1f },
             { BiomeType.Desert, 1f },
@@ -19,6 +19,6 @@ public class BuffsController : MonoBehaviour
 
     public void AddMultiplier(BiomeType biomeType, float amount)
     {
-        BiomeMultiplier[biomeType] += amount;
+        biomeMultiplier[biomeType] += amount;
     }
 }

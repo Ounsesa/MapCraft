@@ -5,51 +5,55 @@ using UnityEngine.UI;
 
 public class ShowCraftingUI : MonoBehaviour
 {
-    public GameObject CraftingUI;
-    public List<GameObject> OtherCraftingUI;
-    public Player player;
+    #region Variables
+    [SerializeField]
+    private GameObject m_craftingUI;
+    [SerializeField]
+    private List<GameObject> m_otherCraftingUI;
+    [SerializeField]
+    private Player m_player;
 
-    private bool TutorialShown = false;
-    // Start is called before the first frame update
+    private bool m_tutorialShown = false;
+    #endregion
+
     void Awake()
     {
         GetComponent<Button>().onClick.AddListener(ToggleUIVisibility);
     }
 
-    // Update is called once per frame
     public void ToggleUIVisibility()
     {
-        if (!GameManager.Instance.TutorialOpen)
+        if (!GameManager.instance.tutorialOpen)
         {
-            CraftingUI.GetComponent<Canvas>().enabled = !CraftingUI.GetComponent<Canvas>().enabled;
+            m_craftingUI.GetComponent<Canvas>().enabled = !m_craftingUI.GetComponent<Canvas>().enabled;
 
-            player.CanPlacePiece = !CraftingUI.GetComponent<Canvas>().enabled;
+            m_player.canPlacePiece = !m_craftingUI.GetComponent<Canvas>().enabled;
 
-            for (int i = 0; i < OtherCraftingUI.Count; i++)
+            for (int i = 0; i < m_otherCraftingUI.Count; i++)
             {
-                OtherCraftingUI[i].GetComponent<Canvas>().enabled = false;
+                m_otherCraftingUI[i].GetComponent<Canvas>().enabled = false;
             }
 
 
-            if(!TutorialShown)
+            if(!m_tutorialShown)
             {
-                TutorialShown = true;
+                m_tutorialShown = true;
 
-                if (CraftingUI.gameObject.name == "CraftingCanvas")
+                if (m_craftingUI.gameObject.name == "CraftingCanvas")
                 {
-                    Tutorial.Instance.ShowCraftTutorial();
+                    Tutorial.instance.ShowCraftTutorial();
                 }
-                else if (CraftingUI.gameObject.name == "MapCraftingCanvas")
+                else if (m_craftingUI.gameObject.name == "MapCraftingCanvas")
                 {
-                    Tutorial.Instance.ShowMapExtensionTutorial();
+                    Tutorial.instance.ShowMapExtensionTutorial();
                 }
-                else if (CraftingUI.gameObject.name == "TimeBuffCanvas")
+                else if (m_craftingUI.gameObject.name == "TimeBuffCanvas")
                 {
-                    Tutorial.Instance.ShowTimeBuffTutorial();
+                    Tutorial.instance.ShowTimeBuffTutorial();
                 }
-                else if (CraftingUI.gameObject.name == "BiomeBuffCanvas")
+                else if (m_craftingUI.gameObject.name == "BiomeBuffCanvas")
                 {
-                    Tutorial.Instance.ShowBiomeBuffTutorial();
+                    Tutorial.instance.ShowBiomeBuffTutorial();
                 }
             }
         }

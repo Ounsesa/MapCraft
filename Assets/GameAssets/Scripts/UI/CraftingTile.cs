@@ -5,77 +5,80 @@ using UnityEngine.UI;
 
 public class CraftingTile : MonoBehaviour
 {
-    public Vector2Int GridPosition = new Vector2Int();
-    public CraftingGrid CraftingGrid;
-    public MapCraftingGrid MapCraftingGrid;
+    #region Variables
+    public Vector2Int gridPosition = new Vector2Int();
+    public CraftingGrid craftingGrid;
 
-    protected bool Selected = false;
+    protected bool selected = false;
+    protected Image image;
+    protected Button button;
 
-    protected Image Image;
-    protected Button Button;
+    [SerializeField]
+    private MapCraftingGrid m_mapCraftingGrid;
+    #endregion
 
     protected void Awake()
     {
-        Image = GetComponent<Image>();
-        Button = GetComponent<Button>();
-        Button.onClick.AddListener(SelectTile);
+        image = GetComponent<Image>();
+        button = GetComponent<Button>();
+        button.onClick.AddListener(SelectTile);
     }
 
     protected virtual void SelectTile()
     {
-        Selected = !Selected;
-        if(Selected)
+        selected = !selected;
+        if(selected)
         {
-            if(MapCraftingGrid != null)
+            if(m_mapCraftingGrid != null)
             {
-                switch (MapCraftingGrid.MapCraftType)
+                switch (m_mapCraftingGrid.mapCraftType)
                 {
                     case BiomeType.Forest:
-                        Image.color = Color.green;
+                        image.color = Color.green;
                         break;
                     case BiomeType.Desert:
-                        Image.color = Color.yellow;
+                        image.color = Color.yellow;
                         break;
                     case BiomeType.Mountain:
-                        Image.color = Color.gray;
+                        image.color = Color.gray;
                         break;
                     case BiomeType.Plains:
-                        Image.color = Color.blue;
+                        image.color = Color.blue;
                         break;
                 }
-                MapCraftingGrid.ActivateTile(GridPosition, Selected);
+                m_mapCraftingGrid.ActivateTile(gridPosition, selected);
             }
             else
             {
-                Image.color = Color.yellow;
-                CraftingGrid.ActivateTile(GridPosition, Selected);
+                image.color = Color.yellow;
+                craftingGrid.ActivateTile(gridPosition, selected);
             }
         }
         else 
         {
-            if (MapCraftingGrid != null)
+            if (m_mapCraftingGrid != null)
             {
-                Image.color = Color.black;
-                MapCraftingGrid.ActivateTile(GridPosition, Selected);
+                image.color = Color.black;
+                m_mapCraftingGrid.ActivateTile(gridPosition, selected);
             } 
             else
             {
-                Image.color = Color.gray;
-                CraftingGrid.ActivateTile(GridPosition, Selected);
+                image.color = Color.gray;
+                craftingGrid.ActivateTile(gridPosition, selected);
             }
         }
     }
 
     public void Deselect()
     {
-        Selected = false;
-        if (MapCraftingGrid != null)
+        selected = false;
+        if (m_mapCraftingGrid != null)
         {
-            Image.color = Color.black;
+            image.color = Color.black;
         }
         else
         {
-            Image.color = Color.gray;
+            image.color = Color.gray;
         }
     }
 }

@@ -6,7 +6,7 @@ public class MapCraftingOption : TileCraftingOption
 {
     protected override void Start()
     {
-        CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.MapExtension].Clone();        
+        CraftCost = CraftCostsController.instance.craftingInitialCosts[CraftType.MapExtension].Clone();        
         UpdateItemUI(ItemType, Id, CurrentAmount);
 
     }

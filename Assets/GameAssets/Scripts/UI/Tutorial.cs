@@ -6,135 +6,129 @@ using UnityEngine.UI;
 
 public class Tutorial : MonoBehaviour
 {
-    public static Tutorial Instance;
 
-    private List<string> TutorialStrings;
-    [SerializeField]
-    private int StartingString = 0;
-    [SerializeField]
-    private int EndingString = 5;
+    #region Variables
+    public static Tutorial instance;
 
-
-    [SerializeField]
-    private int StartTutorialPiecePlaced = 6;
-    [SerializeField]
-    private int EndTutorialPiecePlaced = 9;
-    private int StartTutorialCrafting = 10;
-    private int EndTutorialCrafting = 20;
-    private int StartTutorialTrash = 21;
-    private int EndTutorialTrash = 23;
-    private int StartTutorialMapExtensions = 24;
-    private int EndTutorialMapExtensions = 30;
-    private int StartTutorialTimeBuffs = 31;
-    private int EndTutorialTimeBuffs = 33;
-    private int StartTutorialBiomeBuffs = 34;
-    private int EndTutorialBiomeBuffs = 36;
-    private int StartTutorialFinalExtension = 37;
-    private int EndTutorialFinalExtension = 39;
-    private int StartTutorialFinalExtensionCrafted = 40;
-    private int EndTutorialFinalExtensionCrafted = 41;
-    private int StartTutorialFinal = 42;
-    private int EndTutorialFinal = 43;
+    private List<string> m_tutorialStrings;
+    private int m_startingString = 0;
+    private int m_endingString = 5;
+    private int m_startTutorialPiecePlaced = 6;
+    private int m_endTutorialPiecePlaced = 9;
+    private int m_startTutorialCrafting = 10;
+    private int m_endTutorialCrafting = 20;
+    private int m_startTutorialTrash = 21;
+    private int m_endTutorialTrash = 23;
+    private int m_startTutorialMapExtensions = 24;
+    private int m_endTutorialMapExtensions = 30;
+    private int m_startTutorialTimeBuffs = 31;
+    private int m_endTutorialTimeBuffs = 33;
+    private int m_startTutorialBiomeBuffs = 34;
+    private int m_endTutorialBiomeBuffs = 36;
+    private int m_startTutorialFinalExtension = 37;
+    private int m_endTutorialFinalExtension = 39;
+    private int m_startTutorialFinalExtensionCrafted = 40;
+    private int m_endTutorialFinalExtensionCrafted = 41;
+    private int m_startTutorialFinal = 42;
+    private int m_endTutorialFinal = 43;
 
     [SerializeField]
-    private GameObject TutorialText;
-    private TextMeshProUGUI textMeshPro;
-
-    private bool PlayerGivenPiece = false;
-    private string TutorialFileName = "Tutorial";
-
+    private TextMeshProUGUI m_textMeshPro;
     [SerializeField]
-    private Player Player;
+    private Player m_player;
+
+    private bool m_playerGivenPiece = false;
+    private string m_tutorialFileName = "Tutorial";
+
+    #endregion
 
 
-    // Start is called before the first frame update
     void Awake()
     {
-        if (Instance != null)
+        if (instance != null)
         {
-            Destroy(Instance.gameObject);
+            Destroy(instance.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
 
-        Instance = this;
-        textMeshPro = TutorialText.GetComponent<TextMeshProUGUI>();
+        instance = this;
         GetComponent<Button>().onClick.AddListener(TutorialClicked);
     }
 
     private void Start()
     {
-        TutorialStrings = CSVParser.ParseCSVToTutorial(TutorialFileName);
+        m_tutorialStrings = CSVParser.ParseCSVToTutorial(m_tutorialFileName);
 
-        StartTutorial(StartingString, EndingString);
+        StartTutorial(m_startingString, m_endingString);
     }
 
 
     void TutorialClicked()
     {
-        if(StartingString == EndTutorialFinal)
+        if(m_startingString == m_endTutorialFinal)
         {
             return;
         }
 
-        if (StartingString >= EndingString)
+        if (m_startingString >= m_endingString)
         {
             GetComponent<Canvas>().enabled = false;
-            GameManager.Instance.TutorialOpen = false;
-            if (!PlayerGivenPiece)
+            GameManager.instance.tutorialOpen = false;
+            if (!m_playerGivenPiece)
             {
-                PlayerGivenPiece = true;
-                Player.StartPiece();                
+                m_playerGivenPiece = true;
+                m_player.StartPiece();                
             }
             return;
         }
 
-        textMeshPro.text = TutorialStrings[++StartingString];
+        m_textMeshPro.text = m_tutorialStrings[++m_startingString];
     }
 
     public void StartTutorial(int StartingLine, int EndingLine)
     {
-        StartingString = StartingLine;
-        EndingString = EndingLine;
-        textMeshPro.text = TutorialStrings[StartingString];
-        GameManager.Instance.TutorialOpen = true;
+        m_startingString = StartingLine;
+        m_endingString = EndingLine;
+        m_textMeshPro.text = m_tutorialStrings[m_startingString];
+        GameManager.instance.tutorialOpen = true;
         GetComponent<Canvas>().enabled = true;
 
     }
 
     public void StartTutorialFirstPiecePlaced()
     {
-        StartTutorial(StartTutorialPiecePlaced, EndTutorialPiecePlaced);
+        StartTutorial(m_startTutorialPiecePlaced, m_endTutorialPiecePlaced);
     }
     public void ShowCraftTutorial()
     {
-        StartTutorial(StartTutorialCrafting, EndTutorialCrafting);
+        StartTutorial(m_startTutorialCrafting, m_endTutorialCrafting);
     }
     public void ShowMapExtensionTutorial()
     {
-        StartTutorial(StartTutorialMapExtensions, EndTutorialMapExtensions);
+        StartTutorial(m_startTutorialMapExtensions, m_endTutorialMapExtensions);
     }
     public void ShowTimeBuffTutorial()
     {
-        StartTutorial(StartTutorialTimeBuffs, EndTutorialTimeBuffs);
+        StartTutorial(m_startTutorialTimeBuffs, m_endTutorialTimeBuffs);
     }
     public void ShowBiomeBuffTutorial()
     {
-        StartTutorial(StartTutorialBiomeBuffs, EndTutorialBiomeBuffs);
+        StartTutorial(m_startTutorialBiomeBuffs, m_endTutorialBiomeBuffs);
     }
     public void ShowTrashTutorial()
     {
-        StartTutorial(StartTutorialTrash, EndTutorialTrash);
+        StartTutorial(m_startTutorialTrash, m_endTutorialTrash);
     }
     public void ShowFinalTutorial()
     {
-        StartTutorial(StartTutorialFinalExtension, EndTutorialFinalExtension);
+        StartTutorial(m_startTutorialFinalExtension, m_endTutorialFinalExtension);
     }
     public void ShowFinalCraftTutorial()
     {
-        StartTutorial(StartTutorialFinalExtensionCrafted, EndTutorialFinalExtensionCrafted);
+        StartTutorial(m_startTutorialFinalExtensionCrafted, m_endTutorialFinalExtensionCrafted);
     }
     public void ShowFinalFinalTutorial()
     {
-        StartTutorial(StartTutorialFinal, EndTutorialFinal);
+        StartTutorial(m_startTutorialFinal, m_endTutorialFinal);
     }
 }

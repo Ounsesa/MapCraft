@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 using static UnityEngine.InputSystem.DefaultInputActions;
 
-public class InputManager : Manager
+public class InputManager : MonoBehaviour
 {
 
     public InputActions RegisterInputActionsPlayer(PlayerInput playerInput, Player player)
@@ -14,11 +14,11 @@ public class InputManager : Manager
         InputActions _playerActions = new InputActions();
         
 
-        ActionsName _actionsName = GameManager.Instance.ActionsName;
-        _playerActions.RightClickAction = playerInput.actions.FindAction(_actionsName.RightClickAction);
-        _playerActions.MoveCameraAction = playerInput.actions.FindAction(_actionsName.MoveCameraAction);
-        _playerActions.PlayerAction = playerInput.actions.FindAction(_actionsName.PlayerAction);
-        _playerActions.MouseWheelAction = playerInput.actions.FindAction(_actionsName.MouseWheelAction);
+        ActionsName _actionsName = GameManager.instance.actionsName;
+        _playerActions.rightClickAction = playerInput.actions.FindAction(_actionsName.rightClickAction);
+        _playerActions.moveCameraAction = playerInput.actions.FindAction(_actionsName.moveCameraAction);
+        _playerActions.playerAction = playerInput.actions.FindAction(_actionsName.playerAction);
+        _playerActions.mouseWheelAction = playerInput.actions.FindAction(_actionsName.mouseWheelAction);
 
         return _playerActions;
     }
@@ -26,17 +26,17 @@ public class InputManager : Manager
 public class InputActions
 {
     #region Properties
-    public InputAction RightClickAction;
-    public InputAction MoveCameraAction;
-    public InputAction PlayerAction;
-    public InputAction MouseWheelAction;
+    public InputAction rightClickAction;
+    public InputAction moveCameraAction;
+    public InputAction playerAction;
+    public InputAction mouseWheelAction;
     #endregion
 }
 [System.Serializable]
 public struct ActionsName
 {
-    public string RightClickAction;
-    public string MoveCameraAction;
-    public string PlayerAction;
-    public string MouseWheelAction;
+    public string rightClickAction;
+    public string moveCameraAction;
+    public string playerAction;
+    public string mouseWheelAction;
 }

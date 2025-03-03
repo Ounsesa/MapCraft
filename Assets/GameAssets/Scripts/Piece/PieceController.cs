@@ -6,28 +6,37 @@ using UnityEngine.UIElements;
 
 public class PieceController : MonoBehaviour
 {
-    public List<Piece> PlacedPiecesList;
-    public Map Map;
-    public Inventory Inventory;
-    public Player Player;
-    public GameObject PiecePrefab;
-    public BuffsController BuffsController;
+    #region Variables
+    public GameObject piecePrefab;
+    public List<List<int>> finalMatrix;
+    [HideInInspector]
+    public Vector2Int finalPosition;
+    [HideInInspector]
+    public List<Piece> placedPiecesList;
 
-
-
-    public List<GameObject> OtherBiomesPiecesList;
-    public int NumberOfOtherBiomes = 10;
-    public int DistanceFromMap = 10;
-    public int DistanceBetweenLayers = 10;
-    public int RandomOffset = 5;
-    public int RandomValueForNotPlacePiece = 3;
-
-    public int RandomValueForFinalMapExtension = 1;
-
+    [SerializeField]
+    private int m_numberOfOtherBiomes = 10;
+    [SerializeField]
+    private int DistanceFromMap = 10;
+    [SerializeField]
+    private int DistanceBetweenLayers = 10;
+    [SerializeField]
+    private int RandomOffset = 5;
+    [SerializeField]
+    private int RandomValueForNotPlacePiece = 3;
+    [SerializeField]
+    private int RandomValueForFinalMapExtension = 1;
     private List<List<List<int>>> MapExtensionsFormsList;
-
-    public List<List<int>> FinalMatrix;
-    public Vector2Int FinalPosition;
+    [SerializeField]
+    private Map m_map;
+    [SerializeField]
+    private Inventory m_inventory;
+    [SerializeField]
+    private Player m_player;
+    [SerializeField]
+    private BuffsController m_buffsController;
+    private List<GameObject> m_otherBiomesPiecesList = new List<GameObject>();
+    #endregion
 
 
     // Start is called before the first frame update
@@ -35,9 +44,8 @@ public class PieceController : MonoBehaviour
     {
         InitializeOtherBiomes();
 
-
-        Invoke("StartResourcesLootingWithDelay", GameManager.Instance.GetLootInterval(PieceType.Resource));
-        Invoke("StartMaterialsLootingWithDelay", GameManager.Instance.GetLootInterval(PieceType.Material));
+        Invoke("StartResourcesLootingWithDelay", GameManager.instance.GetLootInterval(PieceType.Resource));
+        Invoke("StartMaterialsLootingWithDelay", GameManager.instance.GetLootInterval(PieceType.Material));
 
     }
     void StartResourcesLootingWithDelay()
@@ -51,36 +59,35 @@ public class PieceController : MonoBehaviour
 
     public void AddPiece(Piece Piece)
     {
-        PlacedPiecesList.Add(Piece);
+        placedPiecesList.Add(Piece);
 
-
-        if(Piece.Type == PieceType.MaterialBuff)
+        if(Piece.type == PieceType.MaterialBuff)
         {
-            GameManager.Instance.SetLootInterval(PieceType.Material, GameManager.Instance.GetLootInterval(PieceType.Material) * 0.9f);
+            GameManager.instance.SetLootInterval(PieceType.Material, GameManager.instance.GetLootInterval(PieceType.Material) * 0.9f);
         }
-        else if(Piece.Type == PieceType.ResourceBuff)
+        else if(Piece.type == PieceType.ResourceBuff)
         {
-            GameManager.Instance.SetLootInterval(PieceType.Resource, GameManager.Instance.GetLootInterval(PieceType.Resource) * 0.9f);
+            GameManager.instance.SetLootInterval(PieceType.Resource, GameManager.instance.GetLootInterval(PieceType.Resource) * 0.9f);
         }
-        else if(Piece.Type == PieceType.BiomeBuff)
+        else if(Piece.type == PieceType.BiomeBuff)
         {
-            BuffsController.AddMultiplier(GetBiomeType(Piece), 1);
+            m_buffsController.AddMultiplier(GetBiomeType(Piece), 1);
         }        
     }
 
     private BiomeType GetBiomeType(Piece Piece) 
     {
-        Vector2Int Direction = Piece.WorldPosition - Map.WorldPosition;
+        Vector2Int Direction = Piece.worldPosition - m_map.worldPosition;
         Direction.y = -Direction.y;
 
-        return (BiomeType)Map.Matrix[Direction.y][Direction.x];      
+        return (BiomeType)m_map.matrix[Direction.y][Direction.x];      
     }
 
     public void SavePiece(Piece Piece)
     {
-        if(Player.CurrentPiece == null)
+        if(m_player.currentPiece == null)
         {
-            Player.CurrentPiece = Piece;
+            m_player.currentPiece = Piece;
             Piece.CreatePiece();
         }
     }
@@ -88,42 +95,42 @@ public class PieceController : MonoBehaviour
     void LootResources(PieceType typeToLoot)
     {
         Debug.Log("Loot" + typeToLoot);
-        if(PlacedPiecesList.Count > 0)
+        if(placedPiecesList.Count > 0)
         {
-            List<List<int>> MapMatrix = Map.Matrix;
+            List<List<int>> MapMatrix = m_map.matrix;
 
-            for(int i = 0; i < PlacedPiecesList.Count; i++) 
+            for(int i = 0; i < placedPiecesList.Count; i++) 
             {
-                if (PlacedPiecesList[i].Type == typeToLoot ) 
+                if (placedPiecesList[i].type == typeToLoot ) 
                 {
-                    Vector2Int MapPosition = PlacedPiecesList[i].WorldPosition - Map.WorldPosition;
+                    Vector2Int MapPosition = placedPiecesList[i].worldPosition - m_map.worldPosition;
                     MapPosition.y = Mathf.Abs(MapPosition.y);
 
-                    for (int j = 0; j < PlacedPiecesList[i].Matrix.Count; j++)
+                    for (int j = 0; j < placedPiecesList[i].matrix.Count; j++)
                     {
-                        for (int k = 0; k < PlacedPiecesList[i].Matrix[j].Count; k++)
+                        for (int k = 0; k < placedPiecesList[i].matrix[j].Count; k++)
                         {
-                            if (PlacedPiecesList[i].Matrix[j][k] != GameManager.Instance.INVALID_TILE)
+                            if (placedPiecesList[i].matrix[j][k] != GameManager.INVALID_TILE)
                             {
-                                int value = Map.Matrix[MapPosition.y + j][MapPosition.x + k];
+                                int value = m_map.matrix[MapPosition.y + j][MapPosition.x + k];
 
-                                if (PlacedPiecesList[i].Type == PieceType.Resource)
+                                if (placedPiecesList[i].type == PieceType.Resource)
                                 {
                                     ResourceType resource = (ResourceType)(value);
-                                    Inventory.AddResource((value), 1);
+                                    m_inventory.AddResource((value), 1);
                                     Debug.Log($"Resource: {resource}");
                                 }
-                                else if (PlacedPiecesList[i].Type == PieceType.Material)
+                                else if (placedPiecesList[i].type == PieceType.Material)
                                 {
                                     MaterialType material = (MaterialType)(value);
-                                    Inventory.AddMaterial((value), 1);
+                                    m_inventory.AddMaterial((value), 1);
                                     Debug.Log($"Material: {material}");
 
                                     int RandomValue = Random.Range(0, 1500);
                                     Debug.Log(RandomValue);
                                     if (RandomValue <= RandomValueForFinalMapExtension)
                                     {
-                                        Inventory.AddFinalExtensionTile();
+                                        m_inventory.AddFinalExtensionTile();
                                         Debug.Log("Final Extension Looted");
                                     }
                                 }
@@ -148,14 +155,14 @@ public class PieceController : MonoBehaviour
         while (true)
         {
 
-            for(int i = 0; i < FinalMatrix.Count; i++)
+            for(int i = 0; i < finalMatrix.Count; i++)
             {
-                for(int j = 0; j < FinalMatrix[i].Count; j++)
+                for(int j = 0; j < finalMatrix[i].Count; j++)
                 {
-                    FinalMatrix[i][j] = (FinalMatrix[i][j] + 1) % 5;
+                    finalMatrix[i][j] = (finalMatrix[i][j] + 1) % 5;
                 }
             }
-            Map.MapRender.RenderMap(FinalPosition, FinalMatrix);
+            m_map.mapRender.RenderMap(finalPosition, finalMatrix);
             yield return new WaitForSeconds(1f);
         }
     }
@@ -163,7 +170,7 @@ public class PieceController : MonoBehaviour
 
     public bool CreateBuffPiece(PieceType piece)
     {
-        if(Player.CurrentPiece != null)
+        if(m_player.currentPiece != null)
         {
             return false;
         }
@@ -173,11 +180,11 @@ public class PieceController : MonoBehaviour
                     new List<int> { 1 }
                 };
 
-        GameObject tile = Instantiate(PiecePrefab);
+        GameObject tile = Instantiate(piecePrefab);
         Piece auxPiece = tile.GetComponent<Piece>();
         auxPiece.InitPiece(piece, Matrix);
         auxPiece.CreatePiece();
-        Player.CurrentPiece = auxPiece;
+        m_player.currentPiece = auxPiece;
 
         return true;
     }
@@ -188,7 +195,7 @@ public class PieceController : MonoBehaviour
         while (true)
         {
             LootResources(PieceType.Resource);
-            yield return new WaitForSeconds(GameManager.Instance.GetLootInterval(PieceType.Resource));
+            yield return new WaitForSeconds(GameManager.instance.GetLootInterval(PieceType.Resource));
         }
     }
     IEnumerator LootMaterialsRoutine()
@@ -196,7 +203,7 @@ public class PieceController : MonoBehaviour
         while (true)
         {
             LootResources(PieceType.Material);
-            yield return new WaitForSeconds(GameManager.Instance.GetLootInterval(PieceType.Material));
+            yield return new WaitForSeconds(GameManager.instance.GetLootInterval(PieceType.Material));
         }
     }
 
@@ -204,11 +211,11 @@ public class PieceController : MonoBehaviour
     {
         List<Piece> pieces = new List<Piece>();
 
-        for(int i = 0; i < OtherBiomesPiecesList.Count; i++) 
+        for(int i = 0; i < m_otherBiomesPiecesList.Count; i++) 
         {
-            if(OtherBiomesPiecesList[i].GetComponent<Piece>() != MapExtensionPiece)
+            if(m_otherBiomesPiecesList[i].GetComponent<Piece>() != MapExtensionPiece)
             {
-                pieces.Add(OtherBiomesPiecesList[i].GetComponent<Piece>());
+                pieces.Add(m_otherBiomesPiecesList[i].GetComponent<Piece>());
             }
         }
         return IsPieceOverlapping(MapExtensionPiece, pieces);
@@ -219,29 +226,29 @@ public class PieceController : MonoBehaviour
         for (int i = 0; i < PieceListToIterate.Count; i++)
         {
             Piece OtherPiece = PieceListToIterate[i];
-            if (OtherPiece.WorldPosition.x + OtherPiece.Matrix[0].Count - 1 < piece.WorldPosition.x ||
-               OtherPiece.WorldPosition.y - OtherPiece.Matrix.Count - 1 > piece.WorldPosition.y ||
-               piece.WorldPosition.x + piece.Matrix[0].Count - 1 < OtherPiece.WorldPosition.x ||
-               piece.WorldPosition.y - piece.Matrix.Count - 1 > OtherPiece.WorldPosition.y)
+            if (OtherPiece.worldPosition.x + OtherPiece.matrix[0].Count - 1 < piece.worldPosition.x ||
+               OtherPiece.worldPosition.y - OtherPiece.matrix.Count - 1 > piece.worldPosition.y ||
+               piece.worldPosition.x + piece.matrix[0].Count - 1 < OtherPiece.worldPosition.x ||
+               piece.worldPosition.y - piece.matrix.Count - 1 > OtherPiece.worldPosition.y)
             {
                 continue;
             }
 
-            Vector2Int Direction = piece.WorldPosition - OtherPiece.WorldPosition;
+            Vector2Int Direction = piece.worldPosition - OtherPiece.worldPosition;
 
-            for(int j = 0; j < piece.Matrix.Count; j ++) 
+            for(int j = 0; j < piece.matrix.Count; j ++) 
             { 
-                for(int k = 0; k < piece.Matrix[j].Count; k ++)
+                for(int k = 0; k < piece.matrix[j].Count; k ++)
                 {
                     Vector2Int AuxPosition = Direction + new Vector2Int(k, -j);
                     if (AuxPosition.x < 0 ||
                         AuxPosition.y > 0 ||
-                        AuxPosition.x >= OtherPiece.Matrix[0].Count ||
-                        Mathf.Abs(AuxPosition.y) >= OtherPiece.Matrix.Count)
+                        AuxPosition.x >= OtherPiece.matrix[0].Count ||
+                        Mathf.Abs(AuxPosition.y) >= OtherPiece.matrix.Count)
                     {
                         continue;
                     }
-                    if (OtherPiece.Matrix[Mathf.Abs(AuxPosition.y)][AuxPosition.x] != GameManager.Instance.INVALID_TILE && piece.Matrix[j][k] != GameManager.Instance.INVALID_TILE)
+                    if (OtherPiece.matrix[Mathf.Abs(AuxPosition.y)][AuxPosition.x] != GameManager.INVALID_TILE && piece.matrix[j][k] != GameManager.INVALID_TILE)
                     {
                         Debug.Log("Overlapping");
                         return true;
@@ -272,7 +279,7 @@ public class PieceController : MonoBehaviour
 
         int ExtensionsPlaced = 0;
 
-        while (ExtensionsPlaced < NumberOfOtherBiomes)
+        while (ExtensionsPlaced < m_numberOfOtherBiomes)
         {
             for (int j = 0; j < Directions.Count; j++)
             {
@@ -281,7 +288,7 @@ public class PieceController : MonoBehaviour
                     continue;
                 }
 
-                GameObject tile = Instantiate(PiecePrefab);
+                GameObject tile = Instantiate(piecePrefab);
                 Piece BiomePiece = tile.GetComponent<Piece>();
 
                 int RandomBiome = Random.Range(0, ResourcesManager.GetEnumLength<BiomeType>());
@@ -307,12 +314,12 @@ public class PieceController : MonoBehaviour
 
                 BiomePiece.InitPiece(PieceType.MapExtension, Matrix);
                 BiomePiece.CreatePiece();
-                BiomePiece.WorldPosition = WorldPosition;
+                BiomePiece.worldPosition = WorldPosition;
                 ExtensionsPlaced++;
 
-                OtherBiomesPiecesList.Add(tile);
+                m_otherBiomesPiecesList.Add(tile);
 
-                if(ExtensionsPlaced >= NumberOfOtherBiomes)
+                if(ExtensionsPlaced >= m_numberOfOtherBiomes)
                 {
                     break;
                 }
@@ -332,55 +339,55 @@ public class PieceController : MonoBehaviour
         {
             new List<List<int>>
             { 
-                new List<int> { GameManager.Instance.INVALID_TILE, 0, GameManager.Instance.INVALID_TILE },
+                new List<int> { GameManager.INVALID_TILE, 0, GameManager.INVALID_TILE },
                 new List<int> { 0, 0 , 0 },
-                new List<int> { GameManager.Instance.INVALID_TILE, 0, GameManager.Instance.INVALID_TILE }
+                new List<int> { GameManager.INVALID_TILE, 0, GameManager.INVALID_TILE }
             },
 
             new List<List<int>>
             { 
                 new List<int> { 0, 0 , 0 },
-                new List<int> {0, GameManager.Instance.INVALID_TILE, GameManager.Instance.INVALID_TILE }
+                new List<int> {0, GameManager.INVALID_TILE, GameManager.INVALID_TILE }
             },
 
             new List<List<int>>
             {
                 new List<int> { 0, 0},
-                new List<int> {0, GameManager.Instance.INVALID_TILE },
+                new List<int> {0, GameManager.INVALID_TILE },
                 new List<int> {0, 0}
             },
 
             new List<List<int>>
             {
-                new List<int> {0, GameManager.Instance.INVALID_TILE, 0 },
+                new List<int> {0, GameManager.INVALID_TILE, 0 },
                 new List<int> { 0, 0, 0},
                 new List<int> { 0, 0, 0 }
             },
 
             new List<List<int>>
             {
-                new List<int> {0, GameManager.Instance.INVALID_TILE, GameManager.Instance.INVALID_TILE },
-                new List<int> { 0, 0, GameManager.Instance.INVALID_TILE},
+                new List<int> {0, GameManager.INVALID_TILE, GameManager.INVALID_TILE },
+                new List<int> { 0, 0, GameManager.INVALID_TILE},
                 new List<int> { 0, 0, 0 }
             },
 
             new List<List<int>>
             {
                 new List<int> {0, 0 , 0 },
-                new List<int> { GameManager.Instance.INVALID_TILE, 0, 0},
-                new List<int> { GameManager.Instance.INVALID_TILE, GameManager.Instance.INVALID_TILE, 0 }
+                new List<int> { GameManager.INVALID_TILE, 0, 0},
+                new List<int> { GameManager.INVALID_TILE, GameManager.INVALID_TILE, 0 }
             },
 
             new List<List<int>>
             {
-                new List<int> { GameManager.Instance.INVALID_TILE, 0, 0},
+                new List<int> { GameManager.INVALID_TILE, 0, 0},
                 new List<int> { 0, 0, 0 }
             },
 
             new List<List<int>>
             {
                 new List<int> { 0, 0, 0},
-                new List<int> { 0, GameManager.Instance.INVALID_TILE, 0 },
+                new List<int> { 0, GameManager.INVALID_TILE, 0 },
                 new List<int> { 0, 0, 0 }
             },
         };
@@ -388,20 +395,20 @@ public class PieceController : MonoBehaviour
 
     public void IsAdjacentToMapExtension(Piece piece)
     {
-        for (int i = OtherBiomesPiecesList.Count - 1; i >= 0; i--)
+        for (int i = m_otherBiomesPiecesList.Count - 1; i >= 0; i--)
         {
-            GameObject AuxGameObject = OtherBiomesPiecesList[i];
+            GameObject AuxGameObject = m_otherBiomesPiecesList[i];
             Piece OtherPiece = AuxGameObject.GetComponent<Piece>();
-            if (Map.CheckAdjacency(piece, OtherPiece.WorldPosition, OtherPiece.Matrix))
+            if (m_map.CheckAdjacency(piece, OtherPiece.worldPosition, OtherPiece.matrix))
             {
-                OtherBiomesPiecesList.RemoveAt(i);
-                if (Map.ExtendMap(OtherPiece))
+                m_otherBiomesPiecesList.RemoveAt(i);
+                if (m_map.ExtendMap(OtherPiece))
                 {
                     Destroy(AuxGameObject);
                 }
                 else
                 {
-                    OtherBiomesPiecesList.Add(AuxGameObject);
+                    m_otherBiomesPiecesList.Add(AuxGameObject);
                 }
             }
         }

@@ -14,38 +14,43 @@ public enum PieceType
 
 public class Piece : WorldMatrix
 {
-    public PieceType Type;
-    public GameObject PiecePrefab;
-    List<GameObject> Tiles = new List<GameObject>();    
+    #region Variables
+    [HideInInspector]
+    public PieceType type;
+
+    [SerializeField]
+    private GameObject m_piecePrefab;    
+    private List<GameObject> m_tiles = new List<GameObject>();
+    #endregion
 
     public void InitPiece(PieceType Type, List<List<int>> Matrix)
     {
-        this.Type = Type;
-        WorldPosition = new Vector2Int(0, 0);
-        this.Matrix = Matrix;
+        this.type = Type;
+        worldPosition = new Vector2Int(0, 0);
+        this.matrix = Matrix;
     }
     public void CreatePiece()
     {
-        for (int i = 0; i < Matrix.Count; i++)
+        for (int i = 0; i < matrix.Count; i++)
         {
-            for (int j = 0; j < Matrix[i].Count; j++)
+            for (int j = 0; j < matrix[i].Count; j++)
             {
-                if (Matrix[i][j] != GameManager.Instance.INVALID_TILE)
+                if (matrix[i][j] != GameManager.INVALID_TILE)
                 {
-                    Vector3 WorldPosition = new Vector3(this.WorldPosition.x + j, this.WorldPosition.y - i, 0);
-                    GameObject tile = Instantiate(PiecePrefab, WorldPosition, Quaternion.identity);
+                    Vector3 WorldPosition = new Vector3(this.worldPosition.x + j, this.worldPosition.y - i, 0);
+                    GameObject tile = Instantiate(m_piecePrefab, WorldPosition, Quaternion.identity);
                     tile.transform.SetParent(transform);
-                    if(Type == PieceType.Resource)
+                    if(type == PieceType.Resource)
                     {
                         tile.GetComponent<SpriteRenderer>().color = Color.white;
                     }
-                    else if(Type == PieceType.Material)
+                    else if(type == PieceType.Material)
                     {
                         tile.GetComponent<SpriteRenderer>().color = Color.black;
                     }
-                    else if(Type == PieceType.MapExtension)
+                    else if(type == PieceType.MapExtension)
                     {
-                        switch(Matrix[i][j])
+                        switch(matrix[i][j])
                         {
                             case 0:
                                 tile.GetComponent<SpriteRenderer>().color = Color.green;
@@ -64,9 +69,9 @@ public class Piece : WorldMatrix
                                 break;
                         }
                     }
-                    else if(Type == PieceType.BiomeBuff)
+                    else if(type == PieceType.BiomeBuff)
                     {
-                        switch (Matrix[i][j])
+                        switch (matrix[i][j])
                         {
                             case 0:
                                 tile.GetComponent<SpriteRenderer>().color = Color.green;
@@ -82,15 +87,15 @@ public class Piece : WorldMatrix
                                 break;
                         }
                     }
-                    else if(Type == PieceType.MaterialBuff) 
+                    else if(type == PieceType.MaterialBuff) 
                     { 
                         tile.GetComponent<SpriteRenderer>().color = Color.red;
                     }
-                    else if(Type == PieceType.ResourceBuff)
+                    else if(type == PieceType.ResourceBuff)
                     {
                         tile.GetComponent<SpriteRenderer>().color = Color.magenta;
                     }
-                    Tiles.Add(tile);                    
+                    m_tiles.Add(tile);                    
                 }
             }
         }
@@ -102,39 +107,39 @@ public class Piece : WorldMatrix
     {
         if (Direction)
         {
-            List<List<int>> rotatedPiece = new List<List<int>>();
-            for (int i = 0; i < Matrix[0].Count; i++)
+            List<List<int>> RotatedPiece = new List<List<int>>();
+            for (int i = 0; i < matrix[0].Count; i++)
             {
-                rotatedPiece.Add(new List<int>(new int[Matrix.Count]));
+                RotatedPiece.Add(new List<int>(new int[matrix.Count]));
             }
 
-            for (int i = 0; i < Matrix.Count; i++)
+            for (int i = 0; i < matrix.Count; i++)
             {
-                for (int j = 0; j < Matrix[i].Count; j++)
+                for (int j = 0; j < matrix[i].Count; j++)
                 {
-                    rotatedPiece[j][Matrix.Count - 1 - i] = Matrix[i][j];
+                    RotatedPiece[j][matrix.Count - 1 - i] = matrix[i][j];
                 }
             }
 
-            Matrix = rotatedPiece;
+            matrix = RotatedPiece;
         }
         else
         {
-            List<List<int>> rotatedPiece = new List<List<int>>();
-            for (int i = 0; i < Matrix[0].Count; i++)
+            List<List<int>> RotatedPiece = new List<List<int>>();
+            for (int i = 0; i < matrix[0].Count; i++)
             {
-                rotatedPiece.Add(new List<int>(new int[Matrix.Count]));
+                RotatedPiece.Add(new List<int>(new int[matrix.Count]));
             }
 
-            for (int i = 0; i < Matrix.Count; i++)
+            for (int i = 0; i < matrix.Count; i++)
             {
-                for (int j = 0; j < Matrix[i].Count; j++)
+                for (int j = 0; j < matrix[i].Count; j++)
                 {
-                    rotatedPiece[Matrix[0].Count - 1 - j][i] = Matrix[i][j];
+                    RotatedPiece[matrix[0].Count - 1 - j][i] = matrix[i][j];
                 }
             }
 
-            Matrix = rotatedPiece;
+            matrix = RotatedPiece;
         }
         RecreatePiece();
     }
@@ -142,16 +147,16 @@ public class Piece : WorldMatrix
 
     private void Update()
     {
-        transform.position = new Vector3(WorldPosition.x, WorldPosition.y, 0);
+        transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
     }
 
     public void RecreatePiece()
     {
-        foreach (GameObject tile in Tiles)
+        foreach (GameObject tile in m_tiles)
         {
             Destroy(tile);
         }
-        Tiles.Clear();
+        m_tiles.Clear();
         CreatePiece();
     }
 

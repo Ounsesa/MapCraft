@@ -36,7 +36,7 @@ public class TileCraftingOption : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        Inventory.OnItemAmountChanged += UpdateItemUI;
+        Inventory.onItemAmountChanged += UpdateItemUI;
         CraftButton.onClick.AddListener(CraftTile);
     }
 
@@ -46,22 +46,22 @@ public class TileCraftingOption : MonoBehaviour
         switch (ItemType)
         {
             case PieceType.Resource:
-                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.Piece].Clone();
+                CraftCost = CraftCostsController.instance.craftingInitialCosts[CraftType.Piece].Clone();
                 break;
             case PieceType.Material:
-                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.Piece].Clone();
+                CraftCost = CraftCostsController.instance.craftingInitialCosts[CraftType.Piece].Clone();
                 break;
         }
         switch (CraftingItemType)
         {
             case PieceType.MaterialBuff:
-                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.TimeBuff].Clone(); 
+                CraftCost = CraftCostsController.instance.craftingInitialCosts[CraftType.TimeBuff].Clone(); 
                 break;
             case PieceType.ResourceBuff:
-                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.TimeBuff].Clone(); 
+                CraftCost = CraftCostsController.instance.craftingInitialCosts[CraftType.TimeBuff].Clone(); 
                 break;
             case PieceType.BiomeBuff:
-                CraftCost = CraftCostsController.Instance.CraftingInitialCosts[CraftType.AmountBuff].Clone(); 
+                CraftCost = CraftCostsController.instance.craftingInitialCosts[CraftType.AmountBuff].Clone(); 
                 break;
         }
 
@@ -107,7 +107,7 @@ public class TileCraftingOption : MonoBehaviour
             }
             else
             {
-                if(GameManager.Instance.TutorialOpen)
+                if(GameManager.instance.tutorialOpen)
                 { 
                     return;
                 }
@@ -128,7 +128,7 @@ public class TileCraftingOption : MonoBehaviour
                     if(CraftingUI)
                     {
                         CraftingUI.GetComponent<Canvas>().enabled = false;
-                        PieceController.Player.CanPlacePiece = true;
+                        Player.canPlacePiece = true;
                     }
                 }
 

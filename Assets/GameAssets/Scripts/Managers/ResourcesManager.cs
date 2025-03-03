@@ -26,9 +26,8 @@ enum MaterialType
 }
 
 
-public class ResourcesManager : Manager
+public class ResourcesManager : MonoBehaviour
 {    
-    public Inventory Inventory;
     public static int GetEnumLength<T>() where T : System.Enum
     {
         return System.Enum.GetValues(typeof(T)).Length;

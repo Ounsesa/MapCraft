@@ -14,19 +14,26 @@ enum PlayerState
 
 public class Player : MonoBehaviour
 {
-    private InputActions InputAction;
+    #region Variables
+    public PieceController pieceController;
     [HideInInspector]
-    public Piece CurrentPiece;
-    public Map Map;
-    public float CameraSpeed = 3f;
-    public float CameraZoomedInSpeed = 3f;
-    public float CameraZoomedOutSpeed = 12f;
-    public float CameraZoomSpeed = 200f;
-    public PieceController PieceController;
-    public MapCraftingButton MapCraftingButton;
-    public bool CanPlacePiece;
+    public Piece currentPiece;    
+    [HideInInspector]
+    public bool canPlacePiece;
 
-    private bool FirstPiecePlaced = false;
+    private bool m_firstPiecePlaced = false;
+    private InputActions m_inputAction;
+    [SerializeField]
+    private Map m_map;
+    [SerializeField]
+    private float m_cameraSpeed = 3f;
+    [SerializeField]
+    private float m_cameraZoomedInSpeed = 3f;
+    [SerializeField]
+    private float m_cameraZoomedOutSpeed = 12f;
+    [SerializeField]
+    private float m_cameraZoomSpeed = 200f;
+    #endregion
 
     public void StartPiece()
     {
@@ -34,55 +41,55 @@ public class Player : MonoBehaviour
         List<List<int>> Matrix = new List<List<int>>()
         {
             new List<int> { 0, 0, 0 },
-            new List<int> { 0, GameManager.Instance.INVALID_TILE, GameManager.Instance.INVALID_TILE }
+            new List<int> { 0, GameManager.INVALID_TILE, GameManager.INVALID_TILE }
         };
 
-        GameObject tile = Instantiate(PieceController.PiecePrefab);
-        CurrentPiece = tile.GetComponent<Piece>();
-        CurrentPiece.InitPiece(PieceType.Material, Matrix);
-        CurrentPiece.CreatePiece();
+        GameObject Tile = Instantiate(pieceController.piecePrefab);
+        currentPiece = Tile.GetComponent<Piece>();
+        currentPiece.InitPiece(PieceType.Material, Matrix);
+        currentPiece.CreatePiece();
 
-        CanPlacePiece = true;
+        canPlacePiece = true;
     }
 
     private void Start()
     {
-        CanPlacePiece = false;
-        PlayerInput playerInput = GetComponent<PlayerInput>();
-        InputAction = GameManager.Instance.InputManager.RegisterInputActionsPlayer(playerInput, this);        
+        canPlacePiece = false;
+        PlayerInput PlayerInput = GetComponent<PlayerInput>();
+        m_inputAction = GameManager.instance.inputManager.RegisterInputActionsPlayer(PlayerInput, this);        
     }
 
     // Update is called once per frame
     void Update()
     {
         ReceiveInput();
-        if(CurrentPiece != null)
+        if(currentPiece != null)
         {
-            CurrentPiece.WorldPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
+            currentPiece.worldPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
         }
     }
 
     private void ReceiveInput()
     {
         
-        if (InputAction.RightClickAction.IsPressed())
+        if (m_inputAction.rightClickAction.IsPressed())
         {
-            if (InputAction.MouseWheelAction.triggered)
+            if (m_inputAction.mouseWheelAction.triggered)
             {
                 CameraZoomAction();
                 Debug.Log("Acercar/alejar la cámara");
             }
             MoveCameraAction();
         }
-        else if (InputAction.PlayerAction.triggered)
+        else if (m_inputAction.playerAction.triggered)
         {
             PerformAction();
         }
-        else if(InputAction.MouseWheelAction.triggered)
+        else if(m_inputAction.mouseWheelAction.triggered)
         {        
-            if(CurrentPiece != null)
+            if(currentPiece != null)
             {
-                CurrentPiece.RotatePiece(InputAction.MouseWheelAction.ReadValue<float>() > 0 ? true : false);
+                currentPiece.RotatePiece(m_inputAction.mouseWheelAction.ReadValue<float>() > 0 ? true : false);
             }
         }
 
@@ -90,52 +97,52 @@ public class Player : MonoBehaviour
 
     private void MoveCameraAction()
     {
-        Vector2 MouseMovement = InputAction.MoveCameraAction.ReadValue<Vector2>();
-        Vector3 NewPosition = new Vector3(-MouseMovement.x, -MouseMovement.y, 0) * CameraSpeed * Time.deltaTime;
+        Vector2 MouseMovement = m_inputAction.moveCameraAction.ReadValue<Vector2>();
+        Vector3 NewPosition = new Vector3(-MouseMovement.x, -MouseMovement.y, 0) * m_cameraSpeed * Time.deltaTime;
         Camera.main.transform.position += NewPosition;
     }
 
     private void PerformAction()
     {
-        if (CurrentPiece != null && CanPlacePiece && !GameManager.Instance.GameEnded)
+        if (currentPiece != null && canPlacePiece && !GameManager.instance.gameEnded)
         { 
-            if (CurrentPiece.Type != PieceType.MapExtension && Map.AddPieceToMap(CurrentPiece))
+            if (currentPiece.type != PieceType.MapExtension && m_map.AddPieceToMap(currentPiece))
             {
                 Debug.Log("Piece placed");
-                PieceController.AddPiece(CurrentPiece);
-                CurrentPiece = null;
+                pieceController.AddPiece(currentPiece);
+                currentPiece = null;
 
-                if(!FirstPiecePlaced)
+                if(!m_firstPiecePlaced)
                 {
-                    FirstPiecePlaced = true;
-                    Tutorial.Instance.StartTutorialFirstPiecePlaced();
+                    m_firstPiecePlaced = true;
+                    Tutorial.instance.StartTutorialFirstPiecePlaced();
                 }
             }
-            else if (CurrentPiece.Type == PieceType.MapExtension && Map.ExtendMap(CurrentPiece))
+            else if (currentPiece.type == PieceType.MapExtension && m_map.ExtendMap(currentPiece))
             {
                 Debug.Log("Adjacent map piece");
-                Destroy(CurrentPiece.gameObject);
-                CurrentPiece = null;
+                Destroy(currentPiece.gameObject);
+                currentPiece = null;
             }
         }
     }
 
     private void CameraZoomAction()
     {
-        float MouseWheelValue = InputAction.MouseWheelAction.ReadValue<float>();
+        float MouseWheelValue = m_inputAction.mouseWheelAction.ReadValue<float>();
         if(MouseWheelValue < 0) 
         {
             float CurrentSize = Camera.main.GetComponent<Camera>().orthographicSize;
-            float NewSize = Mathf.Min(CurrentSize + CameraZoomSpeed * Time.deltaTime, GameManager.Instance.MaxCameraSize);
-            CameraSpeed = Mathf.Min(CameraSpeed + CameraZoomSpeed * Time.deltaTime, CameraZoomedOutSpeed);
+            float NewSize = Mathf.Min(CurrentSize + m_cameraZoomSpeed * Time.deltaTime, GameManager.instance.maxCameraSize);
+            m_cameraSpeed = Mathf.Min(m_cameraSpeed + m_cameraZoomSpeed * Time.deltaTime, m_cameraZoomedOutSpeed);
             Debug.Log(NewSize);
             Camera.main.GetComponent<Camera>().orthographicSize = NewSize;
         }
         else 
         {
             float CurrentSize = Camera.main.GetComponent<Camera>().orthographicSize;
-            float NewSize = Mathf.Max(CurrentSize - CameraZoomSpeed * Time.deltaTime, GameManager.Instance.MinCameraSize);
-            CameraSpeed = Mathf.Max(CameraSpeed - CameraZoomSpeed * Time.deltaTime, CameraZoomedInSpeed);
+            float NewSize = Mathf.Max(CurrentSize - m_cameraZoomSpeed * Time.deltaTime, GameManager.instance.minCameraSize);
+            m_cameraSpeed = Mathf.Max(m_cameraSpeed - m_cameraZoomSpeed * Time.deltaTime, m_cameraZoomedInSpeed);
             Camera.main.GetComponent<Camera>().orthographicSize = NewSize;
         }
     }

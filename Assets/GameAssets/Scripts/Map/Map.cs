@@ -7,13 +7,14 @@ using UnityEngine;
 
 public class Map : WorldMatrix
 {
-    public MapRender MapRender;
-    public PieceController PieceController;
+    #region Variables
+    public MapRender mapRender;
 
-    public string MapName = "InitialMap";
-
-    public int InitialRows = 3;
-    public int InitialColumns = 5;
+    [SerializeField]
+    private PieceController m_pieceController;
+    [SerializeField]
+    private string m_mapName = "InitialMap";
+    #endregion
 
     void Start()
     {
@@ -26,37 +27,37 @@ public class Map : WorldMatrix
 
     private void InitializeMap()
     {
-        CSVParser.ParseCSVToMatrix(MapName, out Matrix);
-        MapRender.RenderMap(WorldPosition,Matrix);
+        CSVParser.ParseCSVToMatrix(m_mapName, out matrix);
+        mapRender.RenderMap(worldPosition,matrix);
     }
 
    
     public bool AddPieceToMap(Piece piece)
     {
-        if (PieceController.IsPieceOverlapping(piece, PieceController.PlacedPiecesList))
+        if (m_pieceController.IsPieceOverlapping(piece, m_pieceController.placedPiecesList))
         {
             Debug.Log("There is a piece in the spot");
             return false;
         }
 
         // Add the piece to the map matrix
-        List<List<int>> PieceMatrix = piece.Matrix;
-        Vector2Int position = piece.WorldPosition;
+        List<List<int>> PieceMatrix = piece.matrix;
+        Vector2Int position = piece.worldPosition;
 
-        if (position.x < WorldPosition.x || //Left
-            position.y > WorldPosition.y || //Top
-            position.y - PieceMatrix.Count < WorldPosition.y - Matrix.Count || //Bottom
-            position.x + PieceMatrix[0].Count > WorldPosition.x + Matrix[0].Count) //Right
+        if (position.x < worldPosition.x || //Left
+            position.y > worldPosition.y || //Top
+            position.y - PieceMatrix.Count < worldPosition.y - matrix.Count || //Bottom
+            position.x + PieceMatrix[0].Count > worldPosition.x + matrix[0].Count) //Right
             return false;
 
         for (int i = 0; i < PieceMatrix.Count; i++)
         {
             for (int j = 0; j < PieceMatrix[i].Count; j++)
             {
-                int col = (position.x - WorldPosition.x) + j;
-                int row = (WorldPosition.y - position.y) + i;
+                int col = (position.x - worldPosition.x) + j;
+                int row = (worldPosition.y - position.y) + i;
 
-                if (Matrix[row][col] == GameManager.Instance.INVALID_TILE && PieceMatrix[i][j] != GameManager.Instance.INVALID_TILE)
+                if (matrix[row][col] == GameManager.INVALID_TILE && PieceMatrix[i][j] != GameManager.INVALID_TILE)
                 {
                     return false;
                 }
@@ -72,8 +73,8 @@ public class Map : WorldMatrix
     public bool ExtendMap(Piece mapExtension)
     {
         // Add the piece to the map matrix
-        List<List<int>> MapExtensionMatrix = mapExtension.Matrix;
-        Vector2Int MapExtensionPosition = mapExtension.WorldPosition;
+        List<List<int>> MapExtensionMatrix = mapExtension.matrix;
+        Vector2Int MapExtensionPosition = mapExtension.worldPosition;
 
         Debug.Log("Try extend map");
 
@@ -83,29 +84,29 @@ public class Map : WorldMatrix
         }
 
 
-        Vector2Int mapTile = MapExtensionPosition - WorldPosition;
+        Vector2Int mapTile = MapExtensionPosition - worldPosition;
 
         for(int i = 0; i < MapExtensionMatrix.Count; i++)
         {
-            if(MapExtensionPosition.y - i > WorldPosition.y)
+            if(MapExtensionPosition.y - i > worldPosition.y)
             {
                 continue;
             }
-            if (Mathf.Abs(MapExtensionPosition.y - i) >= Matrix.Count - WorldPosition.y)
+            if (Mathf.Abs(MapExtensionPosition.y - i) >= matrix.Count - worldPosition.y)
             {
                 break;
             }
             for (int j = 0; j < MapExtensionMatrix[i].Count; j++)
             {
-                if (MapExtensionPosition.x + j < WorldPosition.x)
+                if (MapExtensionPosition.x + j < worldPosition.x)
                 {
                     continue;
                 }
-                if(MapExtensionPosition.x + j >= Matrix[i].Count + WorldPosition.x)
+                if(MapExtensionPosition.x + j >= matrix[i].Count + worldPosition.x)
                 {
                     break;
                 }
-                if (Matrix[Mathf.Abs(mapTile.y - i)][mapTile.x + j] != GameManager.Instance.INVALID_TILE && MapExtensionMatrix[i][j] != GameManager.Instance.INVALID_TILE)
+                if (matrix[Mathf.Abs(mapTile.y - i)][mapTile.x + j] != GameManager.INVALID_TILE && MapExtensionMatrix[i][j] != GameManager.INVALID_TILE)
                 {
                     return false;
                 }
@@ -113,31 +114,31 @@ public class Map : WorldMatrix
         }
 
 
-        if (PieceController.IsOverlapingOtherMapPieces(mapExtension))
+        if (m_pieceController.IsOverlapingOtherMapPieces(mapExtension))
         {
             return false;
         }
 
 
         //Add from the top
-        if (MapExtensionPosition.y > WorldPosition.y)
+        if (MapExtensionPosition.y > worldPosition.y)
         {
             for(int i = 0; i < mapTile.y; i++)
             {
-                List<int> NewRow = Enumerable.Repeat(GameManager.Instance.INVALID_TILE, Matrix[0].Count).ToList();
-                Matrix.Insert(0, NewRow);
-                WorldPosition.y++;
+                List<int> NewRow = Enumerable.Repeat(GameManager.INVALID_TILE, matrix[0].Count).ToList();
+                matrix.Insert(0, NewRow);
+                worldPosition.y++;
             }
         }
 
         //Add from the bottom
-        int rowsToAdd = (WorldPosition.y - Matrix.Count + 1) - (MapExtensionPosition.y - MapExtensionMatrix.Count + 1);
+        int rowsToAdd = (worldPosition.y - matrix.Count + 1) - (MapExtensionPosition.y - MapExtensionMatrix.Count + 1);
         if(rowsToAdd > 0) 
         {
             for (int i = 0; i < rowsToAdd; i++)
             {
-                List<int> NewRow = Enumerable.Repeat(GameManager.Instance.INVALID_TILE, Matrix[0].Count).ToList();
-                Matrix.Add(NewRow);
+                List<int> NewRow = Enumerable.Repeat(GameManager.INVALID_TILE, matrix[0].Count).ToList();
+                matrix.Add(NewRow);
             }
         }
 
@@ -147,39 +148,39 @@ public class Map : WorldMatrix
             
             for (int j = 0; j < Mathf.Abs(mapTile.x); j++)
             {
-                for (int i = 0; i < Matrix.Count; i++)
+                for (int i = 0; i < matrix.Count; i++)
                 {
-                    Matrix[i].Insert(0, GameManager.Instance.INVALID_TILE);
+                    matrix[i].Insert(0, GameManager.INVALID_TILE);
                 }
 
-                WorldPosition.x--;
+                worldPosition.x--;
             }
             
         }
         //Add from the right
-        int columnsToAdd = (MapExtensionPosition.x + MapExtensionMatrix[0].Count - 1) - (WorldPosition.x + Matrix[0].Count - 1);
+        int columnsToAdd = (MapExtensionPosition.x + MapExtensionMatrix[0].Count - 1) - (worldPosition.x + matrix[0].Count - 1);
         if (columnsToAdd > 0)
         {
-            for(int i = 0; i < Matrix.Count; i++)
+            for(int i = 0; i < matrix.Count; i++)
             {
                 for (int j = 0; j < columnsToAdd; j++)
                 {
-                    Matrix[i].Add(GameManager.Instance.INVALID_TILE);
+                    matrix[i].Add(GameManager.INVALID_TILE);
                 }
             }
             
         }
 
-        Vector2Int NewMapTile = MapExtensionPosition - WorldPosition;
+        Vector2Int NewMapTile = MapExtensionPosition - worldPosition;
 
         for (int i = 0; i < MapExtensionMatrix.Count; i++)
         {
             
             for (int j = 0; j < MapExtensionMatrix[i].Count; j++)
             {
-                if(Matrix[Mathf.Abs(NewMapTile.y - i)][NewMapTile.x + j] == GameManager.Instance.INVALID_TILE)
+                if(matrix[Mathf.Abs(NewMapTile.y - i)][NewMapTile.x + j] == GameManager.INVALID_TILE)
                 {
-                    Matrix[Mathf.Abs(NewMapTile.y - i)][NewMapTile.x + j] = MapExtensionMatrix[i][j];                
+                    matrix[Mathf.Abs(NewMapTile.y - i)][NewMapTile.x + j] = MapExtensionMatrix[i][j];                
                 }
             }
         }
@@ -187,17 +188,17 @@ public class Map : WorldMatrix
 
 
 
-        PieceController.IsAdjacentToMapExtension(mapExtension);
+        m_pieceController.IsAdjacentToMapExtension(mapExtension);
 
-        MapRender.RenderMap(mapExtension.WorldPosition, mapExtension.Matrix);
+        mapRender.RenderMap(mapExtension.worldPosition, mapExtension.matrix);
 
-        if (mapExtension.Matrix[0][0] == 4)
+        if (mapExtension.matrix[0][0] == 4)
         {
-            Tutorial.Instance.ShowFinalFinalTutorial();
-            PieceController.FinalMatrix = mapExtension.Matrix;
-            PieceController.FinalPosition = mapExtension.WorldPosition;
-            GameManager.Instance.GameEnded = true;
-            PieceController.EndGame();
+            Tutorial.instance.ShowFinalFinalTutorial();
+            m_pieceController.finalMatrix = mapExtension.matrix;
+            m_pieceController.finalPosition = mapExtension.worldPosition;
+            GameManager.instance.gameEnded = true;
+            m_pieceController.EndGame();
         }
 
         return true;
@@ -207,16 +208,16 @@ public class Map : WorldMatrix
 
     bool CheckAdjacency(Piece mapExtension)
     {
-        return CheckAdjacency(mapExtension, WorldPosition, Matrix);        
+        return CheckAdjacency(mapExtension, worldPosition, matrix);        
     }
     
     public bool CheckAdjacency(Piece mapExtension, Vector2Int OtherPosition, List<List<int>> OtherMatrix)
     {        
 
         // Add the piece to the map matrix
-        List<List<int>> MapExtensionMatrix = mapExtension.Matrix;
-        Vector2Int MapExtensionPosition = mapExtension.WorldPosition;
-        int INVALID_TILE = GameManager.Instance.INVALID_TILE;
+        List<List<int>> MapExtensionMatrix = mapExtension.matrix;
+        Vector2Int MapExtensionPosition = mapExtension.worldPosition;
+        int INVALID_TILE = GameManager.INVALID_TILE;
 
         // Get the dimensions of both matrices
         int mainMatrixWidth = OtherMatrix[0].Count;

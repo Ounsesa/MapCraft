@@ -26,7 +26,7 @@ public class BiomeTileSelection : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        Inventory.OnMapExtensionTileAmountChanged += UpdateItemUI;
+        Inventory.onMapExtensionTileAmountChanged += UpdateItemUI;
         Button = GetComponent<Button>();
         Button.onClick.AddListener(SelectCraftType);
     }
@@ -52,7 +52,7 @@ public class BiomeTileSelection : MonoBehaviour
 
     private void SelectCraftType()
     {
-        MapCraftingGrid.MapCraftType = BiomeType;
+        MapCraftingGrid.mapCraftType = BiomeType;
         GetComponent<Image>().color = Color.yellow;
 
         for(int i = 0; i < OtherTileSelections.Count; i++)

@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager.Requests;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 public class MapPreviewWindow : EditorWindow
 {

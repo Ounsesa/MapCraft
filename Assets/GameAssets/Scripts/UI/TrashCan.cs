@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class TrashCan : MonoBehaviour
 {
-    public Player player;
+    [SerializeField]
+    private Player m_player;
 
     // Start is called before the first frame update
     void Start()
@@ -16,10 +17,10 @@ public class TrashCan : MonoBehaviour
     // Update is called once per frame
     void DestroyPiece()
     {
-        if (player && player.CurrentPiece && player.PieceController.PlacedPiecesList.Count > 0 && player.CurrentPiece.Matrix[0][0] != 4) 
+        if (m_player && m_player.currentPiece && m_player.pieceController.placedPiecesList.Count > 0 && m_player.currentPiece.matrix[0][0] != 4) 
         {
-            Destroy(player.CurrentPiece.gameObject);
-            player.CurrentPiece = null;
+            Destroy(m_player.currentPiece.gameObject);
+            m_player.currentPiece = null;
         }
     }
 }

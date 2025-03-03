@@ -2,64 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Manager
+public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-
+    #region Variables
+    public static GameManager instance;
+    public const int INVALID_TILE = -1;
     [HideInInspector]
-    public InputManager InputManager;
-
+    public InputManager inputManager;
     [Header("Inputs")]
-    public ActionsName ActionsName;
-
-    public bool TutorialOpen = false;
-    public bool GameEnded = false;
-
-
-    public int INVALID_TILE = -1;
-
-    public float MaxCameraSize = 20f;
-    public float MinCameraSize = 5f;
+    public ActionsName actionsName;
+    [HideInInspector]
+    public bool tutorialOpen = false;
+    [HideInInspector]
+    public bool gameEnded = false;
+    public float maxCameraSize = 20f;
+    public float minCameraSize = 5f;
 
     [SerializeField]
-    private float ResourcesLootInterval = 5.0f; // Interval in seconds between looting
+    private float m_resourcesLootInterval = 5.0f; // Interval in seconds between looting
     [SerializeField]
-    private float MaterialsLootInterval = 6.0f; // Interval in seconds between looting
-
+    private float m_materialsLootInterval = 6.0f; // Interval in seconds between looting
+    #endregion
 
     void Awake()
     {
-        if (Instance != null)
+        if (instance != null)
         {
-            Destroy(Instance.gameObject);
+            Destroy(instance.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
 
-        Instance = this;
+        instance = this;
 
-        InputManager = new InputManager();
+        inputManager = new InputManager();
     }
 
     public void SetLootInterval(PieceType pieceType, float LootInterval)
     {
         if(pieceType == PieceType.Resource)
         {
-            ResourcesLootInterval = LootInterval;
+            m_resourcesLootInterval = LootInterval;
         }
         else if(pieceType == PieceType.Material)
         {
-            MaterialsLootInterval = LootInterval;
+            m_materialsLootInterval = LootInterval;
         }
     }
     public float GetLootInterval(PieceType pieceType)
     {
         if(pieceType == PieceType.Resource)
         {
-            return ResourcesLootInterval;
+            return m_resourcesLootInterval;
         }
         else if(pieceType == PieceType.Material)
         {
-            return MaterialsLootInterval;
+            return m_materialsLootInterval;
         }
         return -1;
     }

@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayManager : Manager
+public class GameplayManager : MonoBehaviour
 {
-    public static GameplayManager Instance;
+    public static GameplayManager instance;
 
     void Awake()
     {
-        if (Instance != null)
+        if (instance != null)
         {
-            Destroy(Instance.gameObject);
+            Destroy(instance.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
 
-        Instance = this;
+        instance = this;
     }
    
 

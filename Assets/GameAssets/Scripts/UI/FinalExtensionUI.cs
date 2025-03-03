@@ -7,43 +7,39 @@ using UnityEngine.UI;
 public class FinalExtensionUI : MonoBehaviour
 {
 
+    #region Variables
     [SerializeField]
-    private Inventory Inventory;
-
+    private Inventory m_inventory;
     [SerializeField]
-    private GameObject AssetAmountText;
-
+    private GameObject m_assetAmountText;
     [SerializeField]
-    private Player Player;
+    private Player m_player;
     [SerializeField]
-    private PieceController PieceController;
+    private PieceController m_pieceController;
 
-    private int MaxTilesNeeded = 9;
-    private int CurrentTileAmount = 0;
+    private int m_maxTilesNeeded = 9;
+    private int m_currentTileAmount = 0;
+    private bool m_tutorialShown = false;
+    #endregion
 
-    private bool TutorialShown = false;
-
-    // Start is called before the first frame update
     void Awake()
     {
-        Inventory.OnFinalExtensionTileAmountChanged += OnUpdateUI;
-        GetComponent<Button>().onClick.AddListener(OnButtonClicked);
-
-        
+        m_inventory.onFinalExtensionTileAmountChanged += OnUpdateUI;
+        GetComponent<Button>().onClick.AddListener(OnButtonClicked);        
     }
 
     void OnButtonClicked()
     {
-        if(CurrentTileAmount < MaxTilesNeeded)
+        if(m_currentTileAmount < m_maxTilesNeeded)
         {
             return;
         }
-        if(Player.CurrentPiece)
+        if(m_player.currentPiece)
         {
             return;
         }
 
-        GameObject CurrentMapExtension = Instantiate(PieceController.PiecePrefab);
+        GameObject CurrentMapExtension = Instantiate(m_pieceController.piecePrefab);
         Piece piece = CurrentMapExtension.GetComponent<Piece>();
 
         List<List<int>> Matrix = new List<List<int>>()
@@ -54,7 +50,7 @@ public class FinalExtensionUI : MonoBehaviour
         };
 
         piece.InitPiece(PieceType.MapExtension, Matrix);
-        PieceController.SavePiece(piece);
+        m_pieceController.SavePiece(piece);
 
         GetComponent<Canvas>().enabled = false;
 
@@ -64,20 +60,20 @@ public class FinalExtensionUI : MonoBehaviour
     void OnUpdateUI(int NewAmount)
     {
         GetComponent<Canvas>().enabled = true;
-        CurrentTileAmount = NewAmount;
-        TextMeshProUGUI textMeshPro = AssetAmountText.GetComponent<TextMeshProUGUI>();
-        textMeshPro.text = "" + CurrentTileAmount + "/" + MaxTilesNeeded;
+        m_currentTileAmount = NewAmount;
+        TextMeshProUGUI textMeshPro = m_assetAmountText.GetComponent<TextMeshProUGUI>();
+        textMeshPro.text = "" + m_currentTileAmount + "/" + m_maxTilesNeeded;
 
-        if (CurrentTileAmount == MaxTilesNeeded)
+        if (m_currentTileAmount == m_maxTilesNeeded)
         {
-            Inventory.OnFinalExtensionTileAmountChanged -= OnUpdateUI;
-            Tutorial.Instance.ShowFinalCraftTutorial();
+            m_inventory.onFinalExtensionTileAmountChanged -= OnUpdateUI;
+            Tutorial.instance.ShowFinalCraftTutorial();
         }
 
-        if(!TutorialShown)
+        if(!m_tutorialShown)
         {
-            TutorialShown = true;
-            Tutorial.Instance.ShowFinalTutorial();
+            m_tutorialShown = true;
+            Tutorial.instance.ShowFinalTutorial();
         }
     }
 }
